@@ -109,16 +109,16 @@ export default {
             place: 'Kitchen #1',
             name: 'Pâté of roasted indigenous legumes',
             qnt: 2000,
-            comment: 'deep fried',
-            completed: false
+            status: 'new',
+            comment: 'deep fried'
           },
           {
             id: 1,
             place: 'Bar',
             name: 'Pan-roasted pastry rolls',
             qnt: 1000,
-            comment: '',
-            completed: false
+            status: 'new',
+            comment: ''
           }
         ]
       }
