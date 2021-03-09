@@ -1,9 +1,10 @@
 <template>
   <div
-      :class="['d-flex', 'flex-row', 'no-gutters', 'order-item',{completed: item.completed}]"
+      :class="['d-flex', 'flex-row', 'no-gutters', 'order-item',
+      {'in-process': item.status !== 'new'}, {completed: item.status === 'completed'}]"
       v-for="item in items"
       :key="item.id"
-      @click="item.completed = !item.completed">
+      @click="handleItemStatus(item)">
     <div class="col-10">
       {{ item.name }}
       <br v-if="item.comment.length">
@@ -25,6 +26,17 @@ export default {
   mounted() {
     const a = new Audio('the-ding.mp3')
     a.play()
+  },
+  methods: {
+    handleItemStatus(item) {
+      if (item.status === 'new') {
+        item.status = 'in-process'
+      } else if (item.status === 'in-process') {
+        item.status = 'completed'
+      } else {
+        item.status = 'new'
+      }
+    }
   }
 }
 </script>
@@ -41,6 +53,10 @@ list {
 }
 
 .completed {
+  background: darkseagreen;
+}
+
+.in-process {
   text-decoration: line-through;
 }
 </style>
