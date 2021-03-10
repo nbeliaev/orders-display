@@ -5,7 +5,7 @@
   <Loader v-if="loading"/>
   <OrderList
       v-else-if="orders.length"
-      :orders="filteredOrders"/>
+      :orders="sortedOrders"/>
   <h1 v-else>No active orders for now ;)</h1>
 
   <!--  <div class="container">
@@ -85,8 +85,14 @@ export default {
           return {...order, items: order.items.filter(subEl => subEl.place === this.activePlace)}
         }).filter(i => i.items.length)
       }
+    },
+    sortedOrders() {
+      return this.orders.slice().sort((i1, i2) => {
+        const completed1 = i1.items.filter(i => i.status !== 'completed').length === 0
+        const completed2 = i2.items.filter(i => i.status !== 'completed').length === 0
+        return (completed1 === completed2) ? 0 : completed1 ? 1 : -1;
+      })
     }
-
   },
   mounted() {
     setTimeout(this.getOrders, 0)
