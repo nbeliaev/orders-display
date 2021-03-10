@@ -4,7 +4,7 @@
       {'in-process': item.status !== 'new'}, {completed: item.status === 'completed'}]"
       v-for="item in items"
       :key="item.id"
-      @click="handleItemStatus(item)">
+      @click="handleChangeStatus(item)">
     <div class="col-10">
       {{ item.name }}
       <br v-if="item.comment.length">
@@ -28,7 +28,7 @@ export default {
     a.play()
   },
   methods: {
-    handleItemStatus(item) {
+    handleChangeStatus(item) {
       if (item.status === 'new') {
         item.status = 'in-process'
       } else if (item.status === 'in-process') {

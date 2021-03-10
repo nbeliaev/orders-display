@@ -39,11 +39,6 @@ export default {
       type: Array,
       required: true
     }
-  },
-  methods: {
-    changePl() {
-      console.log(this.selected)
-    }
   }
 }
 </script>
