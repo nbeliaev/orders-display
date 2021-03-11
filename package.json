@@ -9,14 +9,15 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "materialize-css": "^1.0.0-rc.2",
-    "vue": "^3.0.0"
+    "vue": "^3.0.0",
+    "vue-use-sound": "^1.1.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
+    "@vueuse/sound": "^1.1.7",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0-0"

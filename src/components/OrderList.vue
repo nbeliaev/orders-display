@@ -1,33 +1,101 @@
 <template>
-  <div class="m-2">
+  <Loader v-if="loading"/>
+  <div class="m-2" v-else-if="orders.length !== 0">
     <div class="row">
       <Order
-          v-for="order in orders"
+          v-for="order in sortedOrders"
           :key="order.id"
           v-bind:order="order"
           :ref=order.id
       />
     </div>
+    <strong>Active orders:</strong> {{activeOrdersNumber}}
   </div>
+  <h1 v-else>No active orders for now ;)</h1>
 </template>
 
 <script>
+import Loader from '@/components/Loader'
 import Order from '@/components/Order'
 
 export default {
-  props: ['orders'],
-  components: {
-    Order
+  data() {
+    return {
+      loading: true,
+      orders: [],
+    }
+  },
+  emits: ['handle-active-orders-number'],
+  props: {
+    workplace: {
+      type: Object,
+      required: true
+    }
   },
   mounted() {
-    setTimeout(this.refreshOrdersTimeDiff, 500)
+    setTimeout(this.refreshOrdersTimeDiff)
+    setTimeout(this.getOrders)
+  },
+  components: {
+    Loader, Order
+  },
+  computed: {
+    sortedOrders() {
+      return this.orders.slice().sort((i1, i2) => {
+        const completed1 = i1.items.filter(i => i.status !== 'completed').length === 0
+        const completed2 = i2.items.filter(i => i.status !== 'completed').length === 0
+        return (completed1 === completed2) ? 0 : completed1 ? 1 : -1;
+      })
+    },
+    activeOrdersNumber() {
+      const num = this.orders.map(order => {
+        return {...order, items: order.items.filter(subEl => subEl.status !== 'completed')}
+      }).filter(i => i.items.length).length
+      this.$emit('handle-active-orders-number', num)
+      return num
+    }
   },
   methods: {
     refreshOrdersTimeDiff() {
-      this.orders.forEach(i=> {
+      this.orders.forEach(i => {
         this.$refs[i.id].refreshTimeDiff()
       })
-      setTimeout(this.refreshOrdersTimeDiff, 60_000)
+      setTimeout(this.refreshOrdersTimeDiff, 30_000)
+    },
+    getOrders() {
+      const order = {
+        id: new Date().getTime().toString(),
+        zone: 'third floor',
+        table: 'table #3',
+        time: '18:00',
+        timestamp: new Date().getTime(),
+        diff: 0,
+        items: []
+      }
+      if (this.workplace.id === 'K') {
+        order.items.push({
+          id: 0,
+          place: 'Kitchen #1',
+          name: 'Pâté of roasted indigenous legumes',
+          qnt: 2000,
+          status: 'new',
+          comment: 'deep fried'
+        })
+      } else if (this.workplace.id === 'B') {
+        order.items.push({
+          id: 1,
+          place: 'Bar',
+          name: 'Pan-roasted pastry rolls',
+          qnt: 1000,
+          status: 'new',
+          comment: ''
+        })
+      }
+      this.orders.push(order)
+      if (this.loading) {
+        this.loading = false
+      }
+      setTimeout(this.getOrders, 60_000)
     }
   }
 }
