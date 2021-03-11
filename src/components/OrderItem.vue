@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import {useSound} from '@vueuse/sound'
+import ding from '@/assets/the-ding.mp3'
 
 export default {
   props: {
@@ -23,9 +25,15 @@ export default {
       required: true
     }
   },
+  setup() {
+    const {play} = useSound(ding)
+    const notify = () => {
+      play()
+    }
+    return {notify}
+  },
   mounted() {
-    const a = new Audio('the-ding.mp3')
-    a.play()
+    setTimeout(this.notify)
   },
   methods: {
     handleChangeStatus(item) {
