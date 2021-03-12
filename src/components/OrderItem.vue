@@ -1,17 +1,29 @@
 <template>
-  <div
-      :class="['d-flex', 'flex-row', 'no-gutters', 'order-item',
-      {'in-process': item.status !== 'new'}, {completed: item.status === 'completed'}]"
-      v-for="item in items"
-      :key="item.id"
-      @click="handleChangeStatus(item)">
-    <div class="col-10">
-      {{ item.name }}
-      <br v-if="item.comment.length">
-      <strong>{{ item.comment }}</strong>
+  <div class="container-fluid">
+    <div class="row gy-3">
+      <div
+          v-for="item in items"
+          :key="item.id"
+          @click="handleChangeStatus(item)">
+        <div class="row" :class="[
+            {'in-process': item.status !== 'new'},
+            {completed: item.status === 'completed'}
+            ]">
+          <div class="col-10 border-top">
+            <h5>
+              {{ item.name }}
+              <br v-if="item.comment.length">
+              <strong>{{ item.comment }}</strong>
+            </h5>
+          </div>
+          <div class="col-2 border-top">
+            <h5>{{ item.qnt }}</h5>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="col-2">{{ item.qnt }}</div>
   </div>
+
 </template>
 
 <script>
@@ -54,10 +66,6 @@ list {
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-.order-item:hover {
-  background: #eee;
 }
 
 .completed {

@@ -1,15 +1,17 @@
 <template>
   <Loader v-if="loading"/>
   <div class="m-2" v-else-if="orders.length !== 0">
-    <div class="row">
-      <Order
-          v-for="order in sortedOrders"
-          :key="order.id"
-          v-bind:order="order"
-          :ref=order.id
-      />
+    <div class="container-fluid">
+      <div class="row">
+        <Order
+            v-for="order in sortedOrders"
+            :key="order.id"
+            v-bind:order="order"
+            :ref=order.id
+        />
+      </div>
+      <strong>Active orders:</strong> {{ activeOrdersNumber }}
     </div>
-    <strong>Active orders:</strong> {{activeOrdersNumber}}
   </div>
   <h1 v-else>No active orders for now ;)</h1>
 </template>
@@ -65,7 +67,6 @@ export default {
     getOrders() {
       const order = {
         id: new Date().getTime().toString(),
-        zone: 'third floor',
         table: 'table #3',
         time: '18:00',
         timestamp: new Date().getTime(),
@@ -73,14 +74,26 @@ export default {
         items: []
       }
       if (this.workplace.id === 'K') {
-        order.items.push({
-          id: 0,
-          place: 'Kitchen #1',
-          name: 'Pâté of roasted indigenous legumes',
-          qnt: 2000,
-          status: 'new',
-          comment: 'deep fried'
-        })
+        order.items.push(
+            {
+              id: 0,
+              place: 'Kitchen #1',
+              name: 'Pâté of roasted indigenous legumes',
+              qnt: 2000,
+              status: 'new',
+              comment: 'deep fried'
+            }
+        )
+        order.items.push(
+            {
+              id: 1,
+              place: 'Kitchen #1',
+              name: 'Chocolate ice cream with strawberry jam',
+              qnt: 3,
+              status: 'new',
+              comment: ''
+            }
+        )
       } else if (this.workplace.id === 'B') {
         order.items.push({
           id: 1,
