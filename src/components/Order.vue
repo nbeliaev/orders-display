@@ -1,14 +1,12 @@
 <template>
   <div class="col-auto mb-3 d-flex">
-    <div>
-      <div class="card" :class="{completed, completed}">
-        <OrderHeader
-            :table-name="order.table"
-            :completed="completed"
-            :timestamp="order.timestamp"/>
-        <div class="card-body">
-          <OrderItem :items="order.items"/>
-        </div>
+    <div class="card" :class="{completed, completed}">
+      <OrderHeader
+          :table-name="order.table"
+          :completed="completed"
+          :timestamp="order.timestamp"/>
+      <div class="card-body">
+        <OrderItem :items="order.items"/>
       </div>
     </div>
   </div>

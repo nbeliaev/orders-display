@@ -9,14 +9,14 @@
             {'in-process': item.status !== 'new'},
             {completed: item.status === 'completed'}
             ]">
-          <div class="col-10 border-top">
+          <div class="col-10 border-bottom">
             <h5>
               {{ item.name }}
               <br v-if="item.comment.length">
               <strong>{{ item.comment }}</strong>
             </h5>
           </div>
-          <div class="col-2 border-top">
+          <div class="col-2 border-bottom">
             <h5>{{ item.qnt }}</h5>
           </div>
         </div>

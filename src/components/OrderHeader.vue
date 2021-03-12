@@ -53,7 +53,7 @@ export default {
     },
     convertMs(ms) {
       const min = Math.floor((ms / 1000 / 60) << 0)
-      return (min < 1 ? '1' : min.toString()) + 'm.'
+      return (min < 1 ? '1' : min.toString()) + 'm'
     }
   }
 }
