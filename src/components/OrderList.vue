@@ -17,6 +17,8 @@
 <script>
 import Loader from '@/components/Loader'
 import Order from '@/components/Order'
+import tables from '@/randomizer/tables.json'
+import items from '@/randomizer/items.json'
 
 export default {
   data() {
@@ -60,36 +62,27 @@ export default {
     }
   },
   methods: {
+    getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
+    },
     getOrders() {
+      const num = this.getRandomInt(0, 5)
       const order = {
         id: new Date().getTime().toString(),
-        table: 'table #3',
-        time: '18:00',
+        table: tables[num],
         timestamp: new Date().getTime(),
-        diff: 0,
         items: []
       }
+
       if (this.workplace.id === 'K') {
-        order.items.push(
-            {
-              id: 0,
-              place: 'Kitchen #1',
-              name: 'Pâté of roasted indigenous legumes',
-              qnt: 2000,
-              status: 'new',
-              comment: 'deep fried'
-            }
-        )
-        order.items.push(
-            {
-              id: 1,
-              place: 'Kitchen #1',
-              name: 'Chocolate ice cream with strawberry jam',
-              qnt: 3,
-              status: 'new',
-              comment: ''
-            }
-        )
+        const numItems = this.getRandomInt(1, 7)
+        for (let i = 0; i < numItems; i++) {
+          const numItem = this.getRandomInt(0, 5)
+          const item = items[numItem]
+          order.items.push(item)
+        }
       } else if (this.workplace.id === 'B') {
         order.items.push({
           id: 1,
