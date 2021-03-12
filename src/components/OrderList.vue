@@ -9,7 +9,6 @@
             v-bind:order="order"
         />
       </div>
-      <strong>Active orders:</strong> {{ activeOrdersNumber }}
     </div>
   </div>
   <h1 v-else>No active orders for now ;)</h1>
@@ -48,11 +47,16 @@ export default {
       })
     },
     activeOrdersNumber() {
-      const num = this.orders.map(order => {
-        return {...order, items: order.items.filter(subEl => subEl.status !== 'completed')}
+      return this.orders.map(order => {
+        return {
+          ...order, items: order.items.filter(item => item.status !== 'completed')
+        }
       }).filter(i => i.items.length).length
-      this.$emit('handle-active-orders-number', num)
-      return num
+    }
+  },
+  watch: {
+    activeOrdersNumber() {
+      this.$emit('handle-active-orders-number', this.activeOrdersNumber)
     }
   },
   methods: {
