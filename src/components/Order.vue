@@ -2,22 +2,10 @@
   <div class="col-auto mb-3 d-flex">
     <div>
       <div class="card" :class="{completed, completed}">
-        <div class="div card-header">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-10">
-                <h5 class="card-title text-muted">{{ order.table }}</h5>
-              </div>
-              <div class="col-2 ml-auto">
-             <span
-                 :class="{'text-warning': timeDiff > 60_000}"
-                 v-if="!completed">
-               {{ convertMs(timeDiff) }}
-             </span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <OrderHeader
+            :table-name="order.table"
+            :completed="completed"
+            :timestamp="order.timestamp"/>
         <div class="card-body">
           <OrderItem :items="order.items"/>
         </div>
@@ -27,6 +15,7 @@
 </template>
 
 <script>
+import OrderHeader from "@/components/OrderHeader";
 import OrderItem from "@/components/OrderItem";
 
 export default {
@@ -42,20 +31,11 @@ export default {
     }
   },
   components: {
-    OrderItem
+    OrderHeader, OrderItem
   },
   computed: {
     completed() {
       return this.order.items.filter(i => i.status !== 'completed').length === 0
-    }
-  },
-  methods: {
-    refreshTimeDiff() {
-      this.timeDiff = new Date().getTime() - this.order.timestamp
-    },
-    convertMs(ms) {
-      const min = Math.floor((ms / 1000 / 60) << 0)
-      return (min < 1 ? '1' : min.toString()) + 'm.'
     }
   }
 }

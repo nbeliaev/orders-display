@@ -7,7 +7,6 @@
             v-for="order in sortedOrders"
             :key="order.id"
             v-bind:order="order"
-            :ref=order.id
         />
       </div>
       <strong>Active orders:</strong> {{ activeOrdersNumber }}
@@ -35,7 +34,6 @@ export default {
     }
   },
   mounted() {
-    setTimeout(this.refreshOrdersTimeDiff)
     setTimeout(this.getOrders)
   },
   components: {
@@ -58,12 +56,6 @@ export default {
     }
   },
   methods: {
-    refreshOrdersTimeDiff() {
-      this.orders.forEach(i => {
-        this.$refs[i.id].refreshTimeDiff()
-      })
-      setTimeout(this.refreshOrdersTimeDiff, 30_000)
-    },
     getOrders() {
       const order = {
         id: new Date().getTime().toString(),
