@@ -2,40 +2,248 @@
   {
     "id": 0,
     "place": "Kitchen #1",
-    "name": "thịt bánh mì rau",
-    "qnt": 20,
+    "name": "",
+    "qnt": 0,
     "status": "new",
     "comment": "deep fried"
   },
   {
-    "id": 1,
+    "id": 0,
     "place": "Kitchen #1",
-    "name": "cà chua quả bí",
-    "qnt": 3,
+    "name": "",
+    "qnt": 0,
     "status": "new",
     "comment": ""
   },
   {
-    "id": 2,
+    "id": 0,
     "place": "Kitchen #1",
-    "name": "cơm trứng",
-    "qnt": 1,
+    "name": "",
+    "qnt": 0,
     "status": "new",
     "comment": "raw"
   },
   {
-    "id": 3,
+    "id": 0,
     "place": "Kitchen #1",
-    "name": "xoài",
-    "qnt": 5,
+    "name": "",
+    "qnt": 0,
     "status": "new",
     "comment": ""
   },
   {
-    "id": 4,
+    "id": 0,
     "place": "Kitchen #1",
-    "name": "quả dưa chuột",
-    "qnt": 2,
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
+    "status": "new",
+    "comment": ""
+  },
+  {
+    "id": 0,
+    "place": "Kitchen #1",
+    "name": "",
+    "qnt": 0,
     "status": "new",
     "comment": ""
   }

@@ -19,6 +19,7 @@ import Loader from '@/components/Loader'
 import Order from '@/components/Order'
 import tables from '@/randomizer/tables.json'
 import items from '@/randomizer/items.json'
+import dishes from '@/randomizer/dishes.json'
 
 export default {
   data() {
@@ -65,7 +66,7 @@ export default {
     getRandomInt(min, max) {
       min = Math.ceil(min);
       max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
+      return Math.floor(Math.random() * (max - min)) + min;
     },
     getOrders() {
       const num = this.getRandomInt(0, 5)
@@ -79,8 +80,12 @@ export default {
       if (this.workplace.id === 'K') {
         const numItems = this.getRandomInt(1, 7)
         for (let i = 0; i < numItems; i++) {
-          const numItem = this.getRandomInt(0, 5)
+          const numItem = this.getRandomInt(0, 30)
           const item = items[numItem]
+          item.id = Date.now()
+          const numDish = this.getRandomInt(0, 5)
+          item.name = dishes[numDish]
+          item.qnt = this.getRandomInt(1, 100)
           order.items.push(item)
         }
       } else if (this.workplace.id === 'B') {
