@@ -18,7 +18,6 @@
 import Loader from '@/components/Loader'
 import Order from '@/components/Order'
 import tables from '@/randomizer/tables.json'
-import items from '@/randomizer/items.json'
 import dishes from '@/randomizer/dishes.json'
 
 export default {
@@ -80,12 +79,23 @@ export default {
       if (this.workplace.id === 'K') {
         const numItems = this.getRandomInt(1, 7)
         for (let i = 0; i < numItems; i++) {
-          const numItem = this.getRandomInt(0, 30)
-          const item = items[numItem]
+          const item = {
+            id: 0,
+            place: '',
+            name: '',
+            qnt: 0,
+            status: '',
+            comment: ''
+          }
           item.id = Date.now()
+          item.place = 'Kitchen #1'
           const numDish = this.getRandomInt(0, 5)
           item.name = dishes[numDish]
           item.qnt = this.getRandomInt(1, 100)
+          item.status = 'new'
+          if (numDish % 2 === 0) {
+            item.comment = numDish === 4 ? 'spicy' : 'deep fried'
+          }
           order.items.push(item)
         }
       } else if (this.workplace.id === 'B') {
