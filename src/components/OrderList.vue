@@ -19,6 +19,7 @@ import Loader from '@/components/Loader'
 import Order from '@/components/Order'
 import tables from '@/randomizer/tables.json'
 import dishes from '@/randomizer/dishes.json'
+import Workplaces from "@/randomizer/workplaces.json";
 
 export default {
   data() {
@@ -28,12 +29,6 @@ export default {
     }
   },
   emits: ['handle-active-orders-number'],
-  props: {
-    workplace: {
-      type: Object,
-      required: true
-    }
-  },
   mounted() {
     setTimeout(this.getOrders)
   },
@@ -54,6 +49,16 @@ export default {
           ...order, items: order.items.filter(item => item.status !== 'completed')
         }
       }).filter(i => i.items.length).length
+    },
+    workplace() {
+      const places = Array.from(Workplaces)
+      for (let i = 0; i < places.length; i++) {
+        if (places[i].id === this.$route.params.id) {
+          console.log(places[i].id)
+          return places[i]
+        }
+      }
+      return {id: '', name: ''}
     }
   },
   watch: {

@@ -2,19 +2,11 @@
   <Navbar
       :workplace="workplace"
       :activeOrdersNumber="activeOrdersNumber"/>
-  <WorkplaceList
-      v-if="workplace.id === ''"
-      @handle-workplace-choosing='changeWorkplace'/>
-  <OrderList
-      v-else
-      :workplace="workplace"
-      @handle-active-orders-number="changeActiveOrdersNumber"/>
+  <router-view></router-view>
 </template>
 
 <script>
-import OrderList from '@/components/OrderList'
 import Navbar from '@/components/Navbar'
-import WorkplaceList from "@/components/WorkplaceList";
 
 export default {
   name: 'App',
@@ -28,7 +20,7 @@ export default {
     }
   },
   components: {
-    WorkplaceList, OrderList, Navbar
+    Navbar
   },
   methods: {
     changeWorkplace(workplace) {

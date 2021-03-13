@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-md navbar-light bg-light mb-1">
     <div class="navbar-collapse" id="navbarSupportedContent">
 
-          <div class="container-fluid" v-if="workplace.id !== ''">
+          <div class="container-fluid">
             <div class="row justify-content-md-center">
               <div class="col-md-auto">
                 <div class="mx-3">
