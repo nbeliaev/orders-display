@@ -31,12 +31,9 @@ export default {
   computed: {
     workplace() {
       return this.$store.getters.findWorkplaceById(this.$route.params.id)
-    }
-  },
-  props: {
-    activeOrdersNumber: {
-      type: Number,
-      required: false
+    },
+    activeOrdersNumber() {
+      return this.$store.getters.activeOrdersNumber
     }
   }
 }

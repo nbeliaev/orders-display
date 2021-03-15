@@ -29,6 +29,7 @@
 <script>
 import {useSound} from '@vueuse/sound'
 import ding from '@/assets/the-ding.mp3'
+import {mapMutations} from 'vuex'
 
 export default {
   props: {
@@ -48,14 +49,9 @@ export default {
     setTimeout(this.notify)
   },
   methods: {
+    ...mapMutations(['updateOrderItemStatus']),
     handleChangeStatus(item) {
-      if (item.status === 'new') {
-        item.status = 'in-process'
-      } else if (item.status === 'in-process') {
-        item.status = 'completed'
-      } else {
-        item.status = 'new'
-      }
+      this.updateOrderItemStatus(item)
     }
   }
 }

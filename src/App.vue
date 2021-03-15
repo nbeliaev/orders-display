@@ -1,6 +1,5 @@
 <template>
-  <Navbar
-      :activeOrdersNumber="activeOrdersNumber"/>
+  <Navbar/>
   <router-view></router-view>
 </template>
 
@@ -9,18 +8,8 @@ import Navbar from '@/components/Navbar'
 
 export default {
   name: 'App',
-  data() {
-    return {
-      activeOrdersNumber: 0
-    }
-  },
   components: {
     Navbar
-  },
-  methods: {
-    changeActiveOrdersNumber(num) {
-      this.activeOrdersNumber = num
-    }
   }
 }
 </script>
