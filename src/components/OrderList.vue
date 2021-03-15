@@ -19,7 +19,6 @@ import Loader from '@/components/Loader'
 import Order from '@/components/Order'
 import tables from '@/randomizer/tables.json'
 import dishes from '@/randomizer/dishes.json'
-import Workplaces from "@/randomizer/workplaces.json";
 
 export default {
   data() {
@@ -51,14 +50,7 @@ export default {
       }).filter(i => i.items.length).length
     },
     workplace() {
-      const places = Array.from(Workplaces)
-      for (let i = 0; i < places.length; i++) {
-        if (places[i].id === this.$route.params.id) {
-          console.log(places[i].id)
-          return places[i]
-        }
-      }
-      return {id: '', name: ''}
+      return  this.$store.getters.findWorkplaceById(this.$route.params.id)
     }
   },
   watch: {

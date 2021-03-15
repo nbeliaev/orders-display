@@ -1,6 +1,5 @@
 <template>
   <Navbar
-      :workplace="workplace"
       :activeOrdersNumber="activeOrdersNumber"/>
   <router-view></router-view>
 </template>
@@ -12,20 +11,13 @@ export default {
   name: 'App',
   data() {
     return {
-      activeOrdersNumber: 0,
-      workplace: {
-        id: '',
-        name: ''
-      }
+      activeOrdersNumber: 0
     }
   },
   components: {
     Navbar
   },
   methods: {
-    changeWorkplace(workplace) {
-      this.workplace = workplace
-    },
     changeActiveOrdersNumber(num) {
       this.activeOrdersNumber = num
     }

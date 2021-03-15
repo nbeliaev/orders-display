@@ -1,15 +1,13 @@
 <template>
   <div class="grey darken-1 empty-layout">
-    <Loader v-if="loading"/>
-    <div class="card auth-card" v-else>
+    <div class="card auth-card">
       <div class="card-content">
         <h5 class="text-center">Please select your workplace to start</h5>
         <ul class="list-group list-group-flush">
           <li
               class="list-group-item text-center"
-              v-for="(workplace, indx) in workplaces"
-              :key="workplace.id"
-              @click="$emit('handle-workplace-choosing', this.workplaces[indx])">
+              v-for="workplace in allWorkplaces"
+              :key="workplace.id">
             <router-link :to="`/workplace/${workplace.id}`"
                          tag="button"
                          class="btn btn-outline-dark btn-lg btn-block">
@@ -23,31 +21,16 @@
 </template>
 
 <script>
-import Loader from '@/components/Loader'
-import Workplaces from '@/randomizer/workplaces.json'
+import {mapGetters, mapActions} from 'vuex'
 
 export default {
-  data() {
-    return {
-      loading: true,
-      workplaces: []
-    }
-  },
-  components: {
-    Loader
-  },
+  computed: mapGetters(['allWorkplaces']),
+  methods: mapActions(['fetchWorkplaces']),
   mounted() {
-    setTimeout(this.getWorkplaces, 0)
-  },
-  methods: {
-    getWorkplaces() {
-      if (this.loading) {
-        this.loading = false
-      }
-      this.workplaces = Workplaces
-    }
+    this.fetchWorkplaces()
   }
 }
+
 </script>
 
 <style scoped>
