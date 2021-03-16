@@ -53,9 +53,18 @@ export default {
                 })
             }
             ctx.commit('updateOrders', order)
+        },
+        updateOrderItemStatus({commit}, item) {
+          commit('updateOrderItemStatus', item)
+        },
+        clearState({commit}) {
+            commit('clearState')
         }
     },
     mutations: {
+        clearState(state) {
+            state.orders = []
+        },
         updateOrders(state, order) {
             state.orders.push(order)
         },
