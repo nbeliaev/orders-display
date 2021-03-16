@@ -10,7 +10,7 @@
       </div>
     </div>
   </div>
-  <h1 v-else>No active orders for now ;)</h1>
+  <h1 v-else class="text-center">No active orders for now ;)</h1>
 </template>
 
 <script>
@@ -18,9 +18,20 @@ import Order from '@/components/Order'
 import {mapActions, mapGetters} from 'vuex'
 
 export default {
+  data() {
+    return {
+      polling: null
+    }
+  },
   async mounted() {
     this.fetchOrders(this.workplaceId)
-    setTimeout(this.fetchOrdersBySchedule, 30_000)
+    this.pollData()
+  },
+  beforeUnmount() {
+    if (this.polling !== null) {
+      clearInterval(this.polling)
+    }
+    this.clearState()
   },
   components: {
     Order
@@ -39,9 +50,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchOrders']),
-    fetchOrdersBySchedule() {
-      setInterval(this.fetchOrders, 6000, this.workplaceId)
+    ...mapActions(['fetchOrders', 'clearState']),
+    pollData() {
+      this.polling = setInterval(this.fetchOrders, 6000, this.workplaceId)
     }
   }
 
