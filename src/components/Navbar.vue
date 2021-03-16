@@ -21,13 +21,19 @@
         </div>
       </div>
 
+      <LanguageToggler/>
+
     </div>
   </nav>
 </template>
 
 <script>
+import LanguageToggler from "@/components/LanguageToggler";
 
 export default {
+  components: {
+    LanguageToggler
+  },
   computed: {
     workplace() {
       return this.$store.getters.findWorkplaceById(this.$route.params.id)
