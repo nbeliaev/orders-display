@@ -1,9 +1,9 @@
-import Workplaces from "@/randomizer/workplaces.json";
-
 export default {
     actions: {
-        fetchWorkplaces(ctx) {
-            ctx.commit('updateWorkplaces', Workplaces)
+        async fetchWorkplaces(ctx) {
+            const resp = await fetch('/api/v1/workplaces')
+            const data = await resp.json()
+            ctx.commit('updateWorkplaces', data)
         }
     },
     mutations: {
@@ -21,12 +21,12 @@ export default {
             return state.workplaces
         },
         findWorkplaceById(state) {
-            return id => {
-                const empty = {id: '', name: ''}
-                if (id === undefined) {
+            return uuid => {
+                const empty = {uuid: '', name: ''}
+                if (uuid === undefined) {
                     return empty
                 }
-                const workplace = state.workplaces.find(i => i.id === id)
+                const workplace = state.workplaces.find(i => i.uuid === uuid)
                 if (workplace === undefined) {
                     return empty
                 } else {

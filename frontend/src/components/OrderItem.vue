@@ -12,8 +12,8 @@
           <div class="col-10 border-bottom">
             <h5>
               {{ item.name }}
-              <br v-if="item.comment.length">
-              <strong>{{ item.comment }}</strong>
+              <br v-if="item.note.length">
+              <strong>{{ item.note }}</strong>
             </h5>
           </div>
           <div class="col-2 border-bottom">

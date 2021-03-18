@@ -8,7 +8,7 @@
               class="list-group-item text-center"
               v-for="workplace in allWorkplaces"
               :key="workplace.id">
-            <router-link :to="`/workplace/${workplace.id}`"
+            <router-link :to="`/workplace/${workplace.uuid}`"
                          tag="button"
                          class="btn btn-outline-dark btn-lg btn-block">
               {{ workplace.name }}
