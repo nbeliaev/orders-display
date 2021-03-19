@@ -1,6 +1,7 @@
 package dev.fr13.controllers;
 
 import dev.fr13.dtos.OrderDto;
+import dev.fr13.exceptions.NoSuchWorkplaceException;
 import dev.fr13.persistence.services.OrderService;
 import dev.fr13.persistence.services.WorkplaceService;
 import org.slf4j.Logger;
@@ -33,7 +34,8 @@ public class OrderRestController {
             var orders = orderService.findAll();
             return new ResponseEntity<>(orders, HttpStatus.OK);
         } else {
-            var workplace = workplaceService.findByUuid(workplaceUuid);
+            var workplace = workplaceService.findByUuid(workplaceUuid)
+                    .orElseThrow(() -> new NoSuchWorkplaceException(workplaceUuid));
             var orders = orderService.findAllByWorkplace(workplace);
             return new ResponseEntity<>(orders, HttpStatus.OK);
         }
@@ -54,7 +56,7 @@ public class OrderRestController {
     }
 
     @DeleteMapping(path = "/api/v1/orders/{uuid}")
-    public ResponseEntity<String> deleteOrder(@PathVariable String uuid){
+    public ResponseEntity<String> deleteOrder(@PathVariable String uuid) {
         log.debug("Delete order with uuid {}", uuid);
         orderService.deleteByUuid(uuid);
         return new ResponseEntity<>(HttpStatus.OK);

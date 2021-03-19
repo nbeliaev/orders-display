@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,10 +34,8 @@ public class WorkplaceServiceImpl implements WorkplaceService {
     }
 
     @Override
-    public Workplace findByUuid(String uuid) {
-        var workplace = repository.findByUuid(uuid);
-        return workplace
-                .orElseThrow(() -> new NoSuchElementException(String.format("Workplace with uuid %s was not found.", uuid)));
+    public Optional<Workplace> findByUuid(String uuid) {
+        return repository.findByUuid(uuid);
     }
 
     @Override

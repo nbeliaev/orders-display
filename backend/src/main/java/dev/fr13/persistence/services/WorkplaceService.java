@@ -4,12 +4,13 @@ import dev.fr13.domain.Workplace;
 import dev.fr13.dtos.WorkplaceDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface WorkplaceService {
 
     List<WorkplaceDto> findAllActive();
 
-    Workplace findByUuid(String uuid);
+    Optional<Workplace> findByUuid(String uuid);
 
     WorkplaceDto save(WorkplaceDto dto);
 }
