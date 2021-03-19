@@ -2,8 +2,8 @@
   <div class="container-fluid">
     <div class="row gy-3">
       <div
-          v-for="item in items"
-          :key="item.id"
+          v-for="item in order.items"
+          :key="item.rowNumber"
           @click="handleChangeStatus(item)">
         <div class="row" :class="[
             {'in-process': item.status !== 'new'},
@@ -33,7 +33,7 @@ import {mapActions} from 'vuex'
 
 export default {
   props: {
-    items: {
+    order: {
       type: Object,
       required: true
     }
@@ -51,7 +51,10 @@ export default {
   methods: {
     ...mapActions(['updateOrderItemStatus']),
     handleChangeStatus(item) {
-      this.updateOrderItemStatus(item)
+      this.updateOrderItemStatus({
+        order: this.order,
+        item
+      })
     }
   }
 }

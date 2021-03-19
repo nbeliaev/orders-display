@@ -11,5 +11,7 @@ public interface OrderService {
 
     List<OrderDto> findAll();
 
-    OrderDto save(OrderDto dto);
+    OrderDto saveOrUpdate(OrderDto dto);
+
+    void deleteByUuid(String uuid);
 }

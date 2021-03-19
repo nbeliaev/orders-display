@@ -1,3 +1,7 @@
+import HTTP_STATUS_CODES from 'http-status-enum';
+import HTTP_METHODS from 'http-methods-enum';
+import ORDER_ITEM_STATUSES from '@/enums/order-item-statuses-enum'
+
 export default {
     actions: {
         async fetchOrders(ctx, workplaceId) {
@@ -5,8 +9,33 @@ export default {
             const data = await resp.json()
             ctx.commit('updateOrders', data)
         },
-        updateOrderItemStatus({commit}, item) {
-            commit('updateOrderItemStatus', item)
+        async updateOrderItemStatus({commit}, data) {
+            const currentStatus = data.item.status
+            const newStatus = ORDER_ITEM_STATUSES.getNextStatus(currentStatus)
+
+            commit('updateOrderItemStatus', {
+                order: data.order,
+                item: data.item,
+                status: newStatus
+            })
+
+            const resp = await fetch(
+                "/api/v1/orders",
+                {
+                    method: HTTP_METHODS.PATCH,
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(data.order)
+                })
+            if (resp.status !== HTTP_STATUS_CODES.OK) {
+                commit('updateOrderItemStatus', {
+                    order: data.order,
+                    item: data.item,
+                    status: currentStatus
+                })
+                console.error('Could not update order: status is %s', resp.status)
+            }
         },
         clearState({commit}) {
             commit('clearState')
@@ -19,14 +48,9 @@ export default {
         updateOrders(state, orders) {
             state.orders = orders
         },
-        updateOrderItemStatus(state, item) {
-            if (item.status === 'new') {
-                item.status = 'in-process'
-            } else if (item.status === 'in-process') {
-                item.status = 'completed'
-            } else {
-                item.status = 'new'
-            }
+        updateOrderItemStatus(state, data) {
+            state.orders
+                .find(i => i.uuid === data.order.uuid).items.find(i => i.rowNumber === data.item.rowNumber).status = data.status
         }
     },
     state() {

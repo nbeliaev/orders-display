@@ -41,7 +41,22 @@ public class OrderRestController {
 
     @PostMapping(path = "/api/v1/orders")
     public ResponseEntity<OrderDto> saveOrder(@RequestBody OrderDto dto) {
-        var orderDto = orderService.save(dto);
+        log.debug("Save order {}", dto);
+        var orderDto = orderService.saveOrUpdate(dto);
         return new ResponseEntity<>(orderDto, HttpStatus.CREATED);
+    }
+
+    @PatchMapping(path = "/api/v1/orders")
+    public ResponseEntity<OrderDto> updateOrder(@RequestBody OrderDto dto) {
+        log.debug("Update order {}", dto);
+        var orderDto = orderService.saveOrUpdate(dto);
+        return new ResponseEntity<>(orderDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "/api/v1/orders/{uuid}")
+    public ResponseEntity<String> deleteOrder(@PathVariable String uuid){
+        log.debug("Delete order with uuid {}", uuid);
+        orderService.deleteByUuid(uuid);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

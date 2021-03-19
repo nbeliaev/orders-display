@@ -11,17 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceInMemory implements OrderService {
     private static final Logger log = LoggerFactory.getLogger(OrderServiceInMemory.class);
 
-    private static final List<Order> orders = new ArrayList<>();
+    private static final Map<String, Order> orders = new HashMap<>();
 
     @Value("${app.random.tables}")
     private List<String> tables;
@@ -42,7 +39,7 @@ public class OrderServiceInMemory implements OrderService {
         log.debug("Find all orders by workplace {}", workplace);
         addNewOrder(workplace);
         var result = new ArrayList<OrderDto>();
-        for (Order order : orders) {
+        for (Order order : orders.values()) {
             var isThereSuitableItems = order.getItems().stream()
                     .anyMatch(i -> i.getWorkplace().equals(workplace));
             if (isThereSuitableItems) {
@@ -63,10 +60,10 @@ public class OrderServiceInMemory implements OrderService {
     @Override
     public List<OrderDto> findAll() {
         log.debug("Find all orders");
-        return orders.stream()
-                .map(order -> {
-                    var orderDto = mapper.map(order, OrderDto.class);
-                    var itemDtos = order.getItems().stream()
+        return orders.entrySet().stream()
+                .map(entry -> {
+                    var orderDto = mapper.map(entry, OrderDto.class);
+                    var itemDtos = entry.getValue().getItems().stream()
                             .map(item -> mapper.map(item, OrderItemDto.class))
                             .collect(Collectors.toList());
                     orderDto.setItems(itemDtos);
@@ -76,12 +73,20 @@ public class OrderServiceInMemory implements OrderService {
     }
 
     @Override
-    public OrderDto save(OrderDto dto) {
+    public OrderDto saveOrUpdate(OrderDto dto) {
         log.debug("Save {}", dto);
         var order = mapper.map(dto, Order.class);
         mapWorkplaces(dto, order);
-        orders.add(order);
+        orders.put(order.getUuid(), order);
         return dto;
+    }
+
+    @Override
+    public void deleteByUuid(String uuid) {
+        if (orders.containsKey(uuid)) {
+            log.debug("Delete by uuid {}", uuid);
+            orders.remove(uuid);
+        }
     }
 
     private void mapWorkplaces(OrderDto src, Order dstn) {
@@ -111,7 +116,7 @@ public class OrderServiceInMemory implements OrderService {
                 order.addItem(item);
             }
         }
-        orders.add(order);
+        orders.put(order.getUuid(), order);
     }
 
     private int getRandomNumber(int min, int max) {

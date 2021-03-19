@@ -4,7 +4,7 @@
       <div class="row">
         <Order
             v-for="order in sortedOrders"
-            :key="order.id"
+            :key="order.uuid"
             v-bind:order="order"
         />
       </div>
@@ -52,7 +52,7 @@ export default {
   methods: {
     ...mapActions(['fetchOrders', 'clearState']),
     pollData() {
-      this.polling = setInterval(this.fetchOrders, 6000, this.workplaceId)
+      this.polling = setInterval(this.fetchOrders, 15_000, this.workplaceId)
     }
   }
 

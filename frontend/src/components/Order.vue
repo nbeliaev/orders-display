@@ -6,7 +6,7 @@
           :completed="completed"
           :timestamp="order.timestamp"/>
       <div class="card-body">
-        <OrderItem :items="order.items"/>
+        <OrderItem :order="order"/>
       </div>
     </div>
   </div>
