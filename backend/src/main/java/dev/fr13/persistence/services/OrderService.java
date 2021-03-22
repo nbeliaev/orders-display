@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    List<OrderDto> findAllByWorkplace(Workplace workplace);
+    List<OrderDto> findByWorkplace(Workplace workplace);
 
     List<OrderDto> findAll();
 

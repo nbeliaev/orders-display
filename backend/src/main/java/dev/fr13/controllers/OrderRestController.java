@@ -2,7 +2,7 @@ package dev.fr13.controllers;
 
 import dev.fr13.dtos.OrderDto;
 import dev.fr13.exceptions.NoSuchWorkplaceException;
-import dev.fr13.persistence.services.OrderService;
+import dev.fr13.persistence.services.OrderServiceImpl;
 import dev.fr13.persistence.services.WorkplaceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +17,9 @@ public class OrderRestController {
     private static final Logger log = LoggerFactory.getLogger(OrderRestController.class);
 
     private final WorkplaceService workplaceService;
-    private final OrderService orderService;
+    private final OrderServiceImpl orderService;
 
-    public OrderRestController(WorkplaceService workplaceService, OrderService orderService) {
+    public OrderRestController(WorkplaceService workplaceService, OrderServiceImpl orderService) {
         this.workplaceService = workplaceService;
         this.orderService = orderService;
     }
@@ -36,7 +36,7 @@ public class OrderRestController {
         } else {
             var workplace = workplaceService.findByUuid(workplaceUuid)
                     .orElseThrow(() -> new NoSuchWorkplaceException(workplaceUuid));
-            var orders = orderService.findAllByWorkplace(workplace);
+            var orders = orderService.findByWorkplace(workplace);
             return new ResponseEntity<>(orders, HttpStatus.OK);
         }
     }
