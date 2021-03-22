@@ -7,7 +7,10 @@
         </div>
         <div class="col-2 ml-auto">
              <span
-                 :class="{'text-warning': timeDiff > 60_000}"
+                 :class="[
+                     {'text-warning': isItTimeToWarning},
+                     {'text-danger': isItTimeToDanger}
+                     ]"
                  v-if="!completed">
                {{ convertMs(timeDiff) }}
              </span>
@@ -21,7 +24,17 @@
 export default {
   data() {
     return {
-      timeDiff: 0
+      timeDiff: 0,
+      warningTime: 300_000,
+      dangerTime: 600_000,
+    }
+  },
+  computed: {
+    isItTimeToWarning() {
+      return this.timeDiff > this.warningTime && this.timeDiff < this.dangerTime
+    },
+    isItTimeToDanger() {
+      return this.timeDiff >= this.dangerTime
     }
   },
   props: {
