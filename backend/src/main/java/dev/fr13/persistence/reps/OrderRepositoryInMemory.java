@@ -41,13 +41,13 @@ public class OrderRepositoryInMemory implements OrderRepository {
                 result.add(tempOrder);
             }
         }
-        return result;
+        return sortByTimestamp(result);
     }
 
     @Override
     public List<Order> findAll() {
         log.debug("Find all orders");
-        return new ArrayList<>(orders.values());
+        return sortByTimestamp(orders.values());
     }
 
     @Override
@@ -63,6 +63,12 @@ public class OrderRepositoryInMemory implements OrderRepository {
             log.debug("Delete by uuid {}", uuid);
             orders.remove(uuid);
         }
+    }
+
+    private List<Order> sortByTimestamp(Collection<Order> orders) {
+        return orders.stream()
+                .sorted(Comparator.comparingLong(Order::getTimestamp))
+                .collect(Collectors.toList());
     }
 
     private void addNewOrder(Workplace workplace) {

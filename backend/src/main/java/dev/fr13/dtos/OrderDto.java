@@ -50,4 +50,33 @@ public class OrderDto {
     public void setItems(List<OrderItemDto> items) {
         this.items = items;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderDto orderDto = (OrderDto) o;
+
+        if (timestamp != orderDto.timestamp) return false;
+        if (!uuid.equals(orderDto.uuid)) return false;
+        return table.equals(orderDto.table);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = uuid.hashCode();
+        result = 31 * result + (int) (timestamp ^ (timestamp >>> 32));
+        result = 31 * result + table.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderDto{" +
+                "uuid='" + uuid + '\'' +
+                ", timestamp=" + timestamp +
+                ", table='" + table + '\'' +
+                '}';
+    }
 }

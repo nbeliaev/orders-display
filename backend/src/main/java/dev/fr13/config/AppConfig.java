@@ -23,7 +23,6 @@ public class AppConfig {
                 .addMapping(
                         src -> src.getWorkplace().getUuid(),
                         OrderItemDto::setWorkplace);
-
         return mapper;
     }
 }

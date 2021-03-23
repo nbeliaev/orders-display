@@ -1,5 +1,7 @@
 package dev.fr13.dtos;
 
+import java.util.Objects;
+
 public class OrderItemDto {
     private int rowNumber;
     private String workplace;
@@ -18,6 +20,10 @@ public class OrderItemDto {
         this.name = name;
         this.qnt = qnt;
         this.note = note;
+    }
+
+    public OrderItemDto(int rowNumber, String workplace, String status, String name, int qnt) {
+        this(rowNumber, workplace, status, name, qnt, "");
     }
 
     public int getRowNumber() {
@@ -66,5 +72,43 @@ public class OrderItemDto {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderItemDto that = (OrderItemDto) o;
+
+        if (rowNumber != that.rowNumber) return false;
+        if (qnt != that.qnt) return false;
+        if (!workplace.equals(that.workplace)) return false;
+        if (!status.equals(that.status)) return false;
+        if (!name.equals(that.name)) return false;
+        return Objects.equals(note, that.note);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = rowNumber;
+        result = 31 * result + workplace.hashCode();
+        result = 31 * result + status.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + qnt;
+        result = 31 * result + (note != null ? note.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderItemDto{" +
+                "rowNumber=" + rowNumber +
+                ", workplace='" + workplace + '\'' +
+                ", status='" + status + '\'' +
+                ", name='" + name + '\'' +
+                ", qnt=" + qnt +
+                ", note='" + note + '\'' +
+                '}';
     }
 }
