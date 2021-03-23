@@ -1,8 +1,3 @@
-.DS_Store
-node_modules
-/dist
-
-
 # local env files
 .env.local
 .env.*.local
@@ -21,3 +16,35 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+*.class
+
+# Help #
+backend/*.md
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Apple # 
+.DS_Store
+
+# Intellij #
+*.iml
+*.log
+
+# logback
+logback.out.xml
+
+backend/src/main/resources/public/
+backend/target
+backend/.mvn
+backend/mvnw
+frontend/dist/
+frontend/node/
+frontend/node_modules/
+frontend/npm-debug.log
+frontend/target
+
+!.mvn/wrapper/maven-wrapper.jar
