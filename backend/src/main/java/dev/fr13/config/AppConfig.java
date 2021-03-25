@@ -21,8 +21,11 @@ public class AppConfig {
 
         mapper.createTypeMap(OrderItem.class, OrderItemDto.class)
                 .addMapping(
-                        src -> src.getWorkplace().getUuid(),
-                        OrderItemDto::setWorkplace);
+                        OrderItem::getWorkplaceUuid,
+                        OrderItemDto::setWorkplace)
+                .addMapping(OrderItem::getStatusName,
+                        OrderItemDto::setStatus);
+
         return mapper;
     }
 }

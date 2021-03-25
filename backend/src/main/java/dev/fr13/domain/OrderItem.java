@@ -4,7 +4,7 @@ public class OrderItem {
     private long id;
     private int rowNumber;
     private Workplace workplace;
-    private String status;
+    private OrderItemStatus status;
     private String name;
     private int qnt;
     private String note;
@@ -13,7 +13,7 @@ public class OrderItem {
     public OrderItem() {
     }
 
-    public OrderItem(int rowNumber, Workplace workplace, String status, String name, int qnt, String note) {
+    public OrderItem(int rowNumber, Workplace workplace, OrderItemStatus status, String name, int qnt, String note) {
         this.rowNumber = rowNumber;
         this.workplace = workplace;
         this.status = status;
@@ -22,7 +22,7 @@ public class OrderItem {
         this.note = note;
     }
 
-    public OrderItem(int rowNumber, Workplace workplace, String status, String name, int qnt) {
+    public OrderItem(int rowNumber, Workplace workplace, OrderItemStatus status, String name, int qnt) {
         this(rowNumber, workplace, status, name, qnt, "");
     }
 
@@ -46,15 +46,23 @@ public class OrderItem {
         return workplace;
     }
 
+    public String getWorkplaceUuid() {
+        return workplace.getUuid();
+    }
+
     public void setWorkplace(Workplace workplace) {
         this.workplace = workplace;
     }
 
-    public String getStatus() {
+    public OrderItemStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public String getStatusName() {
+        return status.getName();
+    }
+
+    public void setStatus(OrderItemStatus status) {
         this.status = status;
     }
 

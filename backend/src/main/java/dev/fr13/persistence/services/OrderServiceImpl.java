@@ -1,6 +1,7 @@
 package dev.fr13.persistence.services;
 
 import dev.fr13.domain.Order;
+import dev.fr13.domain.OrderItemStatus;
 import dev.fr13.domain.Workplace;
 import dev.fr13.dtos.OrderDto;
 import dev.fr13.persistence.reps.OrderRepository;
@@ -43,13 +44,42 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto saveOrUpdate(OrderDto dto) {
         log.debug("Save {}", dto);
         var order = convertor.toEntity(dto);
+        fillStatuses(order);
         repository.save(order);
-        return dto;
+        return convertor.toDto(order);
     }
 
     @Override
     public void deleteByUuid(String uuid) {
         log.debug("Delete by uuid {}", uuid);
         repository.deleteByUuid(uuid);
+    }
+
+    /*
+    There are two cases:
+        1. An order was received from 1C side.
+            In this case status will be empty always.
+            If it's a new order we should set the status NEW for all items
+            If it's a persisted order we should set the status according persisted statuses
+        2. An order was received from Frontend side.
+            In this case status manages on Fronted side.
+            We can't receive a new order from Frontend side.
+            We should do nothing.
+     */
+    private void fillStatuses(Order order) {
+        var optnOrder = repository.findByUuid(order.getUuid());
+        if (optnOrder.isEmpty()) {
+            order.getItems().forEach(i -> i.setStatus(OrderItemStatus.NEW));
+        } else {
+            var persistedOrder = optnOrder.get();
+            var items = order.getItems();
+            var persistedItems = persistedOrder.getItems();
+            for (int i = 0; i < items.size(); i++) {
+                if (items.get(i).getStatus() == OrderItemStatus.EMPTY) {
+                    var status = persistedItems.get(i).getStatus();
+                    items.get(i).setStatus(status);
+                }
+            }
+        }
     }
 }

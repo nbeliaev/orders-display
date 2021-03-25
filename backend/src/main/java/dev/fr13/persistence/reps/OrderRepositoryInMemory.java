@@ -48,6 +48,16 @@ public class OrderRepositoryInMemory implements OrderRepository {
     }
 
     @Override
+    public Optional<Order> findByUuid(String uuid) {
+        var order = orders.get(uuid);
+        if (order == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(order);
+        }
+    }
+
+    @Override
     public void deleteByUuid(String uuid) {
         if (orders.containsKey(uuid)) {
             log.debug("Delete by uuid {}", uuid);
