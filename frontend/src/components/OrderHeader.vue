@@ -61,7 +61,7 @@ export default {
     },
     refreshTimeDiff() {
       if (!this.completed) {
-        this.timeDiff = new Date().getTime() - this.timestamp
+        this.timeDiff = this.timestamp - new Date().getTime()
       }
     },
     convertMs(ms) {
