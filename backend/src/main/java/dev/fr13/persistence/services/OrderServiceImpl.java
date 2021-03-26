@@ -1,6 +1,7 @@
 package dev.fr13.persistence.services;
 
 import dev.fr13.domain.Order;
+import dev.fr13.domain.OrderItem;
 import dev.fr13.domain.OrderItemStatus;
 import dev.fr13.domain.Workplace;
 import dev.fr13.dtos.OrderDto;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -50,9 +52,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteByUuid(String uuid) {
+    public Optional<OrderDto> deleteByUuid(String uuid) {
         log.debug("Delete by uuid {}", uuid);
-        repository.deleteByUuid(uuid);
+        var optnOrder = repository.deleteByUuid(uuid);
+        return optnOrder.map(convertor::toDto);
     }
 
     /*
@@ -74,10 +77,15 @@ public class OrderServiceImpl implements OrderService {
             var persistedOrder = optnOrder.get();
             var items = order.getItems();
             var persistedItems = persistedOrder.getItems();
-            for (int i = 0; i < items.size(); i++) {
-                if (items.get(i).getStatus() == OrderItemStatus.EMPTY) {
-                    var status = persistedItems.get(i).getStatus();
-                    items.get(i).setStatus(status);
+            for (OrderItem item : items) {
+                if (item.getStatus() == OrderItemStatus.EMPTY) {
+                    persistedItems.stream()
+                            .filter(i -> i.getRowNumber() == item.getRowNumber())
+                            .filter(i -> i.getName().equals(item.getName()))
+                            .findFirst()
+                            .ifPresentOrElse(
+                                    i -> item.setStatus(i.getStatus()),
+                                    () -> item.setStatus(OrderItemStatus.NEW));
                 }
             }
         }

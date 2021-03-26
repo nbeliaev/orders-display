@@ -4,6 +4,7 @@ import dev.fr13.domain.Workplace;
 import dev.fr13.dtos.OrderDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderService {
 
@@ -13,5 +14,5 @@ public interface OrderService {
 
     OrderDto saveOrUpdate(OrderDto dto);
 
-    void deleteByUuid(String uuid);
+    Optional<OrderDto> deleteByUuid(String uuid);
 }

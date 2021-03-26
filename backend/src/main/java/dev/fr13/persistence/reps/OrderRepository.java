@@ -16,5 +16,5 @@ public interface OrderRepository {
 
     Optional<Order> findByUuid(String uuid);
 
-    void deleteByUuid(String uuid);
+    Optional<Order> deleteByUuid(String uuid);
 }

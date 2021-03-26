@@ -99,6 +99,30 @@ public class OrderItem {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderItem orderItem = (OrderItem) o;
+
+        if (rowNumber != orderItem.rowNumber) return false;
+        if (qnt != orderItem.qnt) return false;
+        if (!workplace.equals(orderItem.workplace)) return false;
+        if (!name.equals(orderItem.name)) return false;
+        return note.equals(orderItem.note);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = rowNumber;
+        result = 31 * result + workplace.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + qnt;
+        result = 31 * result + note.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "OrderItem{" +
                 "id=" + id +
