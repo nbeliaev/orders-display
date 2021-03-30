@@ -1,11 +1,10 @@
 package dev.fr13.persistence.services;
 
 import dev.fr13.domain.Order;
-import dev.fr13.domain.OrderItem;
-import dev.fr13.domain.OrderItemStatus;
 import dev.fr13.domain.Workplace;
 import dev.fr13.dtos.OrderDto;
 import dev.fr13.persistence.reps.OrderRepository;
+import dev.fr13.util.OrderItemsProcessor;
 import dev.fr13.util.convertor.Convertor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +20,14 @@ public class OrderServiceImpl implements OrderService {
 
     private final Convertor<Order, OrderDto> convertor;
     private final OrderRepository repository;
+    private final OrderItemsProcessor itemsProcessor;
 
     public OrderServiceImpl(OrderRepository repository,
+                            OrderItemsProcessor itemsProcessor,
                             @Qualifier("order") Convertor<Order, OrderDto> convertor) {
-        this.convertor = convertor;
         this.repository = repository;
+        this.itemsProcessor = itemsProcessor;
+        this.convertor = convertor;
     }
 
     @Override
@@ -46,7 +48,12 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto saveOrUpdate(OrderDto dto) {
         log.debug("Save {}", dto);
         var order = convertor.toEntity(dto);
-        fillStatuses(order);
+        var optnOrder = repository.findByUuid(order.getUuid());
+        if (optnOrder.isPresent()) {
+            itemsProcessor.refillStatusesAndRowsNumbers(optnOrder.get(), order);
+        } else {
+            itemsProcessor.setStatusesAndRowsNumbersInNewOrder(order);
+        }
         repository.save(order);
         return convertor.toDto(order);
     }
@@ -56,38 +63,5 @@ public class OrderServiceImpl implements OrderService {
         log.debug("Delete by uuid {}", uuid);
         var optnOrder = repository.deleteByUuid(uuid);
         return optnOrder.map(convertor::toDto);
-    }
-
-    /*
-    There are two cases:
-        1. An order was received from 1C side.
-            In this case status will be empty always.
-            If it's a new order we should set the status NEW for all items
-            If it's a persisted order we should set the status according persisted statuses
-        2. An order was received from Frontend side.
-            In this case status manages on Fronted side.
-            We can't receive a new order from Frontend side.
-            We should do nothing.
-     */
-    private void fillStatuses(Order order) {
-        var optnOrder = repository.findByUuid(order.getUuid());
-        if (optnOrder.isEmpty()) {
-            order.getItems().forEach(i -> i.setStatus(OrderItemStatus.NEW));
-        } else {
-            var persistedOrder = optnOrder.get();
-            var items = order.getItems();
-            var persistedItems = persistedOrder.getItems();
-            for (OrderItem item : items) {
-                if (item.getStatus() == OrderItemStatus.EMPTY) {
-                    persistedItems.stream()
-                            .filter(i -> i.getRowNumber() == item.getRowNumber())
-                            .filter(i -> i.getName().equals(item.getName()))
-                            .findFirst()
-                            .ifPresentOrElse(
-                                    i -> item.setStatus(i.getStatus()),
-                                    () -> item.setStatus(OrderItemStatus.NEW));
-                }
-            }
-        }
     }
 }

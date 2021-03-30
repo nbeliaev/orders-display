@@ -8,7 +8,6 @@ public class OrderItem {
     private String name;
     private int qnt;
     private String note;
-    private Order order;
 
     public OrderItem() {
     }
@@ -24,6 +23,10 @@ public class OrderItem {
 
     public OrderItem(int rowNumber, Workplace workplace, OrderItemStatus status, String name, int qnt) {
         this(rowNumber, workplace, status, name, qnt, "");
+    }
+
+    public OrderItem(int rowNumber, Workplace workplace, String name, int qnt) {
+        this(rowNumber, workplace, OrderItemStatus.NEW, name, qnt, "");
     }
 
     public long getId() {
@@ -88,14 +91,6 @@ public class OrderItem {
 
     public void setNote(String note) {
         this.note = note;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
     }
 
     @Override
