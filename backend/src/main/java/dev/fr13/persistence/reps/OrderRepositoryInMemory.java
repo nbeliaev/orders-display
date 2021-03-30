@@ -49,6 +49,7 @@ public class OrderRepositoryInMemory implements OrderRepository {
 
     @Override
     public Optional<Order> findByUuid(String uuid) {
+        log.debug("Find by uuid {}", uuid);
         var order = orders.get(uuid);
         if (order == null) {
             return Optional.empty();

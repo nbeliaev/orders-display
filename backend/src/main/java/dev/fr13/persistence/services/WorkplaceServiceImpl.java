@@ -37,6 +37,7 @@ public class WorkplaceServiceImpl implements WorkplaceService {
 
     @Override
     public Optional<Workplace> findByUuid(String uuid) {
+        log.debug("Find workplace by uuid {}", uuid);
         return repository.findByUuid(uuid);
     }
 
