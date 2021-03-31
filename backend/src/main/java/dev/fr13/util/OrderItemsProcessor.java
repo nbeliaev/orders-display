@@ -25,8 +25,7 @@ public class OrderItemsProcessor {
         }
         for (int i = 0; i < items.size(); i++) {
             var item = items.get(i);
-            item.setRowNumber(i);
-            item.setStatus(OrderItemStatus.NEW);
+            setRowNumberAndStatusAsNew(item, i);
         }
     }
 
@@ -38,57 +37,73 @@ public class OrderItemsProcessor {
         }
 
         var persistedItems = source.getItems();
-        var newItems = newItemsByPersistedItems(items, persistedItems);
+        var newItems = newItemsByPersistedItems(persistedItems, items);
         destn.setItems(newItems);
 
     }
 
-    private List<OrderItem> newItemsByPersistedItems(List<OrderItem> items, List<OrderItem> persistedItems) {
+    private List<OrderItem> newItemsByPersistedItems(List<OrderItem> persistedItems, List<OrderItem> items) {
         var newItems = new ArrayList<OrderItem>();
         var rowsCounter = persistedItems.size();
         for (OrderItem item : items) {
             var filteredItems = getFilteredItems(persistedItems, item.getName());
             var tempItems = new ArrayList<>(filteredItems);
-            var totalQnt = item.getQnt();
             var totalPersistedQnt = filteredItems.stream().mapToInt(OrderItem::getQnt).sum();
-            var qntDiff = totalQnt - totalPersistedQnt;
+            var qntDiff = item.getQnt() - totalPersistedQnt;
             if (isNewRow(totalPersistedQnt)) {
                 log.debug("Found a new order item. Row number is {}, name is {}", rowsCounter, item.getName());
-                item.setRowNumber(rowsCounter++);
-                item.setStatus(OrderItemStatus.NEW);
+                setRowNumberAndStatusAsNew(item, rowsCounter);
                 tempItems.add(item);
-            } else if (qntWasIncrease(qntDiff)) {
+                rowsCounter++;
+            } else if (qntWasIncreased(qntDiff)) {
                 log.debug("Quantity has been increased on {}. Add a new order item, row number is {}, name is {}",
                         qntDiff, rowsCounter, item.getName());
-                item.setRowNumber(rowsCounter++);
+                setRowNumberAndStatusAsNew(item, rowsCounter);
                 item.setQnt(qntDiff);
-                item.setStatus(OrderItemStatus.NEW);
                 tempItems.add(item);
-            } else if (qntWasReduce(qntDiff)) {
+                rowsCounter++;
+            } else if (qntWasReduced(qntDiff)) {
                 log.debug("Quantity has been reduced by {}. Name is {}",
                         qntDiff, item.getName());
-                var newItemWasDeleted = false;
+                var itemWasDeleted = false;
                 var optnItem = tempItems.stream()
-                        .filter(i -> i.getStatus() == OrderItemStatus.NEW)
+                        .filter(this::isNewStatus)
                         .findFirst();
                 if (optnItem.isPresent()) {
-                    newItemWasDeleted = true;
+                    itemWasDeleted = true;
                     var i = optnItem.get();
-                    if (i.getQnt() > -qntDiff) {
-                        reduceQnt(i, qntDiff);
+                    var itemQntIsBiggerThenQntDiff = i.getQnt() > -qntDiff;
+                    if (itemQntIsBiggerThenQntDiff) {
+                        reduceQnt(i, -qntDiff);
                     } else {
                         tempItems.remove(i);
                         rowsCounter--;
                     }
                 }
-                if (!newItemWasDeleted) {
-                    tempItems.stream()
-                            .findFirst()
-                            .ifPresent(i -> reduceQntAndAddNoteAboutQntReducing(i, qntDiff));
+                if (!itemWasDeleted) {
+                    reduceQntAndAddNote(tempItems, -qntDiff);
                 }
             }
             newItems.addAll(tempItems);
         }
+        return getSortedItems(newItems);
+    }
+
+    private void reduceQntAndAddNote(List<OrderItem> items, int qnt) {
+        items.stream()
+                .findFirst()
+                .ifPresent(i -> {
+                    reduceQnt(i, qnt);
+                    addNote(i, qnt);
+                });
+    }
+
+    private void setRowNumberAndStatusAsNew(OrderItem item, int i) {
+        item.setRowNumber(i);
+        item.setStatus(OrderItemStatus.NEW);
+    }
+
+    private List<OrderItem> getSortedItems(ArrayList<OrderItem> newItems) {
         return newItems.stream()
                 .sorted(Comparator.comparingInt(OrderItem::getRowNumber))
                 .collect(Collectors.toList());
@@ -98,11 +113,11 @@ public class OrderItemsProcessor {
         return totalPersistedQnt == 0;
     }
 
-    private boolean qntWasReduce(int qntDiff) {
+    private boolean qntWasReduced(int qntDiff) {
         return qntDiff < 0;
     }
 
-    private boolean qntWasIncrease(int qntDiff) {
+    private boolean qntWasIncreased(int qntDiff) {
         return qntDiff > 0;
     }
 
@@ -120,9 +135,13 @@ public class OrderItemsProcessor {
         return item.getStatus() == OrderItemStatus.EMPTY;
     }
 
-    private void reduceQntAndAddNoteAboutQntReducing(OrderItem item, int qnt) {
+    private boolean isNewStatus(OrderItem item) {
+        return item.getStatus() == OrderItemStatus.NEW;
+    }
+
+    private void addNote(OrderItem item, int qnt) {
         var prvNote = item.getNote();
-        var reduceMsg = String.format("qnt has been reduced on %s", -qnt);
+        var reduceMsg = String.format("qnt has been reduced on %s", qnt);
         if (prvNote.isEmpty()) {
             item.setNote(reduceMsg);
         } else {
@@ -131,6 +150,6 @@ public class OrderItemsProcessor {
     }
 
     private void reduceQnt(OrderItem item, int qnt) {
-        item.setQnt(item.getQnt() + qnt);
+        item.setQnt(item.getQnt() - qnt);
     }
 }
