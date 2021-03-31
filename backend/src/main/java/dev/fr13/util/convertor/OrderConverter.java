@@ -1,7 +1,6 @@
 package dev.fr13.util.convertor;
 
 import dev.fr13.domain.Order;
-import dev.fr13.domain.OrderItemStatus;
 import dev.fr13.dtos.OrderDto;
 import dev.fr13.exceptions.NoSuchWorkplaceException;
 import dev.fr13.persistence.services.WorkplaceService;
@@ -27,7 +26,6 @@ public class OrderConverter implements Convertor<Order, OrderDto> {
     public Order toEntity(OrderDto dto) {
         var entity = mapper.map(dto, Order.class);
         mapWorkplace(dto, entity);
-        mapStatuses(dto, entity);
         return entity;
     }
 
@@ -59,17 +57,6 @@ public class OrderConverter implements Convertor<Order, OrderDto> {
                     workplaceUuid)
                     .orElseThrow(() -> new NoSuchWorkplaceException(workplaceUuid));
             items.get(i).setWorkplace(workplace);
-        }
-    }
-
-    // TODO try to use convertor
-    private void mapStatuses(OrderDto src, Order dstn) {
-        var items = dstn.getItems();
-        var itemsDto = src.getItems();
-        for (int i = 0; i < items.size(); i++) {
-            var statusName = itemsDto.get(i).getStatus();
-            var status = OrderItemStatus.getStatusByName(statusName);
-            items.get(i).setStatus(status);
         }
     }
 }
