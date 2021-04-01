@@ -17,13 +17,6 @@ public class WorkplaceRepositoryInMemory implements WorkplaceRepository {
 
     private static final Map<String, Workplace> workplaces = new HashMap<>();
 
-    static {
-        var kitchen = new Workplace("K", "Kitchen #1");
-        var bar = new Workplace("B", "Bar");
-        workplaces.put(kitchen.getUuid(), kitchen);
-        workplaces.put(bar.getUuid(), bar);
-    }
-
     @Override
     public List<Workplace> findAllActive() {
         log.debug("Find all active workplaces");
@@ -34,6 +27,7 @@ public class WorkplaceRepositoryInMemory implements WorkplaceRepository {
 
     @Override
     public Optional<Workplace> findByUuid(String uuid) {
+        log.debug("Find workplace by uuid {}", uuid);
         var workplace = workplaces.get(uuid);
         if (workplace == null) {
             return Optional.empty();
@@ -44,6 +38,7 @@ public class WorkplaceRepositoryInMemory implements WorkplaceRepository {
 
     @Override
     public Workplace save(Workplace workplace) {
+        log.debug("Save workplace {}", workplace);
         workplaces.put(workplace.getUuid(), workplace);
         return workplace;
     }

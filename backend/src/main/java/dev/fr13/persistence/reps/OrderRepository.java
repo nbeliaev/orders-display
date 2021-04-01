@@ -4,6 +4,7 @@ import dev.fr13.domain.Order;
 import dev.fr13.domain.Workplace;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository {
 
@@ -13,5 +14,7 @@ public interface OrderRepository {
 
     Order save(Order order);
 
-    void deleteByUuid(String uuid);
+    Optional<Order> findByUuid(String uuid);
+
+    Optional<Order> deleteByUuid(String uuid);
 }

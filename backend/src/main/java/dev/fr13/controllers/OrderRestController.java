@@ -56,9 +56,9 @@ public class OrderRestController {
     }
 
     @DeleteMapping(path = "/api/v1/orders/{uuid}")
-    public ResponseEntity<String> deleteOrder(@PathVariable String uuid) {
+    public ResponseEntity<OrderDto> deleteOrder(@PathVariable String uuid) {
         log.debug("Delete order with uuid {}", uuid);
-        orderService.deleteByUuid(uuid);
-        return new ResponseEntity<>(HttpStatus.OK);
+        var optnOrderDto = orderService.deleteByUuid(uuid);
+        return new ResponseEntity<>(optnOrderDto.orElse(new OrderDto()), HttpStatus.OK);
     }
 }

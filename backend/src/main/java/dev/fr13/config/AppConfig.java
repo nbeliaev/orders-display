@@ -1,8 +1,10 @@
 package dev.fr13.config;
 
 import dev.fr13.domain.OrderItem;
+import dev.fr13.domain.OrderItemStatus;
 import dev.fr13.dtos.OrderItemDto;
 import org.modelmapper.Conditions;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,8 +23,30 @@ public class AppConfig {
 
         mapper.createTypeMap(OrderItem.class, OrderItemDto.class)
                 .addMapping(
-                        src -> src.getWorkplace().getUuid(),
-                        OrderItemDto::setWorkplace);
+                        OrderItem::getWorkplaceUuid,
+                        OrderItemDto::setWorkplace)
+                .addMapping(OrderItem::getStatusName,
+                        OrderItemDto::setStatus);
+
+        mapper.createTypeMap(OrderItemDto.class, OrderItem.class)
+                .addMappings(m -> m.skip(OrderItem::setStatus))
+                .setPostConverter(toEntityConvertor());
+
         return mapper;
+    }
+
+    private Converter<OrderItemDto, OrderItem> toEntityConvertor() {
+        return context -> {
+            var source = context.getSource();
+            var destination = context.getDestination();
+            mapStatuses(source, destination);
+            return destination;
+        };
+    }
+
+    private void mapStatuses(OrderItemDto source, OrderItem destination) {
+        var statusName = source.getStatus();
+        var status = OrderItemStatus.getStatusByName(statusName);
+        destination.setStatus(status);
     }
 }

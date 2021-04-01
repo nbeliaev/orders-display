@@ -4,16 +4,15 @@ public class OrderItem {
     private long id;
     private int rowNumber;
     private Workplace workplace;
-    private String status;
+    private OrderItemStatus status;
     private String name;
     private int qnt;
     private String note;
-    private Order order;
 
     public OrderItem() {
     }
 
-    public OrderItem(int rowNumber, Workplace workplace, String status, String name, int qnt, String note) {
+    public OrderItem(int rowNumber, Workplace workplace, OrderItemStatus status, String name, int qnt, String note) {
         this.rowNumber = rowNumber;
         this.workplace = workplace;
         this.status = status;
@@ -22,8 +21,12 @@ public class OrderItem {
         this.note = note;
     }
 
-    public OrderItem(int rowNumber, Workplace workplace, String status, String name, int qnt) {
+    public OrderItem(int rowNumber, Workplace workplace, OrderItemStatus status, String name, int qnt) {
         this(rowNumber, workplace, status, name, qnt, "");
+    }
+
+    public OrderItem(int rowNumber, Workplace workplace, String name, int qnt) {
+        this(rowNumber, workplace, OrderItemStatus.NEW, name, qnt, "");
     }
 
     public long getId() {
@@ -46,15 +49,23 @@ public class OrderItem {
         return workplace;
     }
 
+    public String getWorkplaceUuid() {
+        return workplace.getUuid();
+    }
+
     public void setWorkplace(Workplace workplace) {
         this.workplace = workplace;
     }
 
-    public String getStatus() {
+    public OrderItemStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public String getStatusName() {
+        return status.getName();
+    }
+
+    public void setStatus(OrderItemStatus status) {
         this.status = status;
     }
 
@@ -82,12 +93,28 @@ public class OrderItem {
         this.note = note;
     }
 
-    public Order getOrder() {
-        return order;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderItem orderItem = (OrderItem) o;
+
+        if (rowNumber != orderItem.rowNumber) return false;
+        if (qnt != orderItem.qnt) return false;
+        if (!workplace.equals(orderItem.workplace)) return false;
+        if (!name.equals(orderItem.name)) return false;
+        return note.equals(orderItem.note);
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    @Override
+    public int hashCode() {
+        int result = rowNumber;
+        result = 31 * result + workplace.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + qnt;
+        result = 31 * result + note.hashCode();
+        return result;
     }
 
     @Override
