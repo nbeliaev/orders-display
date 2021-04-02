@@ -2,7 +2,9 @@ package dev.fr13.config;
 
 import dev.fr13.domain.OrderItem;
 import dev.fr13.domain.OrderItemStatus;
+import dev.fr13.domain.Shop;
 import dev.fr13.dtos.OrderItemDto;
+import dev.fr13.dtos.ShopDto;
 import org.modelmapper.Conditions;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -31,6 +33,12 @@ public class AppConfig {
         mapper.createTypeMap(OrderItemDto.class, OrderItem.class)
                 .addMappings(m -> m.skip(OrderItem::setStatus))
                 .setPostConverter(toEntityConvertor());
+
+        mapper.createTypeMap(Shop.class, ShopDto.class)
+                .addMapping(
+                        Shop::getClientUuid,
+                        ShopDto::setClient
+                );
 
         return mapper;
     }
