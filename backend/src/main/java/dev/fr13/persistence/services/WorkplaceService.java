@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface WorkplaceService {
 
-    List<WorkplaceDto> findAllActive();
+    List<WorkplaceDto> findAllActiveByShopIdAndClientId(String clientId, String shopId);
 
     Optional<Workplace> findByUuid(String uuid);
 

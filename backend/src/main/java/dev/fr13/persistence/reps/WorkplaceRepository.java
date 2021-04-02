@@ -1,15 +1,18 @@
 package dev.fr13.persistence.reps;
 
+import dev.fr13.domain.Client;
+import dev.fr13.domain.Shop;
 import dev.fr13.domain.Workplace;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface WorkplaceRepository {
+public interface WorkplaceRepository extends MongoRepository<Workplace, String> {
 
-    List<Workplace> findAllActive();
+    List<Workplace> findAllByShopAndClientAndActiveTrue(Shop shop, Client client);
 
     Optional<Workplace> findByUuid(String uuid);
 
-    Workplace save(Workplace workplace);
+    Optional<Workplace> findByUuidAndShopAndClient(String uuid, Shop shop, Client client);
 }

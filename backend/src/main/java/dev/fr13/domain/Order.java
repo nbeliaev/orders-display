@@ -9,6 +9,8 @@ public class Order {
     private String uuid;
     private long timestamp;
     private String table;
+    private Shop shop;
+    private Client client;
     private List<OrderItem> items = new ArrayList<>();
 
     public Order() {
@@ -52,6 +54,22 @@ public class Order {
         this.table = table;
     }
 
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
     public List<OrderItem> getItems() {
         return Collections.unmodifiableList(items);
     }
@@ -65,12 +83,36 @@ public class Order {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Order order = (Order) o;
+
+        if (id != order.id) return false;
+        if (!uuid.equals(order.uuid)) return false;
+        if (!shop.equals(order.shop)) return false;
+        return client.equals(order.client);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + uuid.hashCode();
+        result = 31 * result + shop.hashCode();
+        result = 31 * result + client.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Order{" +
                 "id=" + id +
                 ", uuid='" + uuid + '\'' +
                 ", timestamp=" + timestamp +
                 ", table='" + table + '\'' +
+                ", shop=" + shop +
+                ", client=" + client +
                 '}';
     }
 }

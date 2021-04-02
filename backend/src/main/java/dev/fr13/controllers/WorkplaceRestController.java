@@ -6,10 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,17 +20,17 @@ public class WorkplaceRestController {
         this.workplaceService = workplaceService;
     }
 
-    @GetMapping(path = "/api/v1/workplaces")
-    public ResponseEntity<List<WorkplaceDto>> getWorkplaces() {
+    @GetMapping(path = "/api/v1/clients/{clientId}/shops/{shopId}/workplaces")
+    public ResponseEntity<List<WorkplaceDto>> getWorkplaces(@PathVariable String clientId,
+                                                            @PathVariable String shopId) {
         log.debug("Get workplace list");
-        var workplaces = workplaceService.findAllActive();
+        var workplaces = workplaceService.findAllActiveByShopIdAndClientId(shopId, clientId);
         return new ResponseEntity<>(workplaces, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/api/v1/workplaces")
-    public ResponseEntity<WorkplaceDto> saveWorkplaces(
-            @RequestBody WorkplaceDto workplaceDto) {
-        log.debug("Save {}", workplaceDto);
+    @PostMapping(path = "/api/v1/clients/{clientId}/shops/{shopId}/workplaces")
+    public ResponseEntity<WorkplaceDto> saveWorkplace(@RequestBody WorkplaceDto workplaceDto) {
+        log.debug("Save workplace {}", workplaceDto);
         var workplace = workplaceService.save(workplaceDto);
         return new ResponseEntity<>(workplace, HttpStatus.CREATED);
     }

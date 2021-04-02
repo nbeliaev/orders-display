@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ShopServiceMongoImpl implements ShopService {
@@ -45,6 +46,12 @@ public class ShopServiceMongoImpl implements ShopService {
     public List<ShopDto> findAll() {
         log.debug("Get shops list");
         return convertor.listEntitiesToListDtos(repository.findAll());
+    }
+
+    @Override
+    public Optional<Shop> findByUuidAndClient(String uuid, Client client) {
+        log.debug("Find shop by uuid {} and client {}", uuid, client);
+        return repository.findByUuidAndClient(uuid, client);
     }
 
     private Client findClientByUuid(String uuid) {

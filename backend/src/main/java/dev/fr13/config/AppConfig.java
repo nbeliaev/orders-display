@@ -3,8 +3,10 @@ package dev.fr13.config;
 import dev.fr13.domain.OrderItem;
 import dev.fr13.domain.OrderItemStatus;
 import dev.fr13.domain.Shop;
+import dev.fr13.domain.Workplace;
 import dev.fr13.dtos.OrderItemDto;
 import dev.fr13.dtos.ShopDto;
+import dev.fr13.dtos.WorkplaceDto;
 import org.modelmapper.Conditions;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -39,6 +41,15 @@ public class AppConfig {
                         Shop::getClientUuid,
                         ShopDto::setClient
                 );
+
+        mapper.createTypeMap(Workplace.class, WorkplaceDto.class)
+                .addMapping(
+                        Workplace::getShopUuid,
+                        WorkplaceDto::setShop
+                )
+                .addMapping(
+                        Workplace::getClientUuid,
+                        WorkplaceDto::setClient);
 
         return mapper;
     }

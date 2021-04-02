@@ -4,12 +4,12 @@ import dev.fr13.domain.Workplace;
 import dev.fr13.dtos.WorkplaceDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 @Qualifier("workplace")
 public class WorkplaceConvertor implements Convertor<Workplace, WorkplaceDto> {
     private final ModelMapper mapper;
