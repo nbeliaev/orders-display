@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientServiceMongoImpl implements ClientService {
@@ -28,6 +29,8 @@ public class ClientServiceMongoImpl implements ClientService {
     public ClientDto save(ClientDto dto) {
         log.debug("Save client {}", dto);
         var client = convertor.toEntity(dto);
+        repository.findByUuid(dto.getUuid())
+                .ifPresent(i -> client.setId(i.getId()));
         var persisted = repository.save(client);
         return convertor.toDto(persisted);
     }
@@ -36,5 +39,11 @@ public class ClientServiceMongoImpl implements ClientService {
     public List<ClientDto> findAll() {
         log.debug("Get clients list");
         return convertor.listEntitiesToListDtos(repository.findAll());
+    }
+
+    @Override
+    public Optional<Client> findByUuid(String uuid) {
+        log.debug("Find client by uuid {}", uuid);
+        return repository.findByUuid(uuid);
     }
 }
