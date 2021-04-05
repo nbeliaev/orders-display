@@ -1,15 +1,25 @@
 package dev.fr13.domain;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Document("orders")
 public class Order {
-    private long id;
+    @Id
+    private String id;
+    @Indexed
     private String uuid;
     private long timestamp;
     private String table;
+    @DBRef
     private Shop shop;
+    @DBRef
     private Client client;
     private List<OrderItem> items = new ArrayList<>();
 
@@ -22,11 +32,11 @@ public class Order {
         this.table = table;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -58,12 +68,20 @@ public class Order {
         return shop;
     }
 
+    public String getShopUuid() {
+        return shop.getUuid();
+    }
+
     public void setShop(Shop shop) {
         this.shop = shop;
     }
 
     public Client getClient() {
         return client;
+    }
+
+    public String getClientUud() {
+        return client.getUuid();
     }
 
     public void setClient(Client client) {
@@ -89,16 +107,20 @@ public class Order {
 
         Order order = (Order) o;
 
-        if (id != order.id) return false;
+        if (timestamp != order.timestamp) return false;
+        if (!id.equals(order.id)) return false;
         if (!uuid.equals(order.uuid)) return false;
+        if (!table.equals(order.table)) return false;
         if (!shop.equals(order.shop)) return false;
         return client.equals(order.client);
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = id.hashCode();
         result = 31 * result + uuid.hashCode();
+        result = 31 * result + (int) (timestamp ^ (timestamp >>> 32));
+        result = 31 * result + table.hashCode();
         result = 31 * result + shop.hashCode();
         result = 31 * result + client.hashCode();
         return result;

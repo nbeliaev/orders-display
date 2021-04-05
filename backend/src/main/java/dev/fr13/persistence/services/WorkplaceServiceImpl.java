@@ -1,5 +1,7 @@
 package dev.fr13.persistence.services;
 
+import dev.fr13.domain.Client;
+import dev.fr13.domain.Shop;
 import dev.fr13.domain.Workplace;
 import dev.fr13.dtos.WorkplaceDto;
 import dev.fr13.exceptions.NoSuchClientException;
@@ -46,6 +48,12 @@ public class WorkplaceServiceImpl implements WorkplaceService {
     }
 
     @Override
+    public Optional<Workplace> findByUuidAndShopAndClient(String uuid, Shop shop, Client client) {
+        log.debug("Find workplace by uuid {}, shop {} and client {}", uuid, shop, client);
+        return repository.findByUuidAndShopAndClientAndActiveTrue(uuid, shop, client);
+    }
+
+    @Override
     public Optional<Workplace> findByUuid(String uuid) {
         log.debug("Find workplace by uuid {}", uuid);
         return repository.findByUuid(uuid);
@@ -61,7 +69,7 @@ public class WorkplaceServiceImpl implements WorkplaceService {
         var workplace = convertor.toEntity(dto);
         workplace.setClient(client);
         workplace.setShop(shop);
-        repository.findByUuidAndShopAndClient(workplace.getUuid(), shop, client)
+        repository.findByUuidAndShopAndClientAndActiveTrue(workplace.getUuid(), shop, client)
                 .ifPresent(i -> workplace.setId(i.getId()));
         log.debug("Save workplace {}", workplace);
         var persisted = repository.save(workplace);

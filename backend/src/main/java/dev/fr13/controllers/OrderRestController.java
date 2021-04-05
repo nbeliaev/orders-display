@@ -1,9 +1,7 @@
 package dev.fr13.controllers;
 
 import dev.fr13.dtos.OrderDto;
-import dev.fr13.exceptions.NoSuchWorkplaceException;
-import dev.fr13.persistence.services.OrderServiceImpl;
-import dev.fr13.persistence.services.WorkplaceService;
+import dev.fr13.persistence.services.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,49 +14,37 @@ import java.util.List;
 public class OrderRestController {
     private static final Logger log = LoggerFactory.getLogger(OrderRestController.class);
 
-    private final WorkplaceService workplaceService;
-    private final OrderServiceImpl orderService;
+    private final OrderService orderService;
 
-    public OrderRestController(WorkplaceService workplaceService, OrderServiceImpl orderService) {
-        this.workplaceService = workplaceService;
+    public OrderRestController(OrderService orderService) {
         this.orderService = orderService;
     }
 
-    @GetMapping(path = "/api/v1/orders")
+    @GetMapping(path = "/api/v1/clients/{clientUuid}/shops/{shopUuid}/workplaces/{workplaceUuid}/orders")
     public ResponseEntity<List<OrderDto>> getOrders(
-            @RequestParam(required = false, defaultValue = "", name = "filter") String workplaceUuid) {
+            @PathVariable String clientUuid,
+            @PathVariable String shopUuid,
+            @PathVariable String workplaceUuid) {
 
-        log.debug("Get order list for workplace with uuid {}", workplaceUuid);
-
-        if (workplaceUuid.isEmpty()) {
-            var orders = orderService.findAll();
-            return new ResponseEntity<>(orders, HttpStatus.OK);
-        } else {
-            var workplace = workplaceService.findByUuid(workplaceUuid)
-                    .orElseThrow(() -> new NoSuchWorkplaceException(workplaceUuid));
-            var orders = orderService.findByWorkplace(workplace);
-            return new ResponseEntity<>(orders, HttpStatus.OK);
-        }
+        log.debug("Get order list by client uuid {}, shop uuid {} and workplace uuid {}", clientUuid, shopUuid, workplaceUuid);
+        var orders = orderService.findByClientAndShopAndWorkplace(clientUuid, shopUuid, workplaceUuid);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/api/v1/orders")
-    public ResponseEntity<OrderDto> saveOrder(@RequestBody OrderDto dto) {
-        log.debug("Save order {}", dto);
+    @PostMapping(path = "/api/v1/clients/{clientUuid}/shops/{shopUuid}/workplaces/{workplaceUuid}/orders")
+    public ResponseEntity<OrderDto> saveOrUpdateOrder(@RequestBody OrderDto dto) {
+        log.debug("Received order {}", dto);
         var orderDto = orderService.saveOrUpdate(dto);
-        return new ResponseEntity<>(orderDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(orderDto, HttpStatus.ACCEPTED);
     }
 
-    @PatchMapping(path = "/api/v1/orders")
-    public ResponseEntity<OrderDto> updateOrder(@RequestBody OrderDto dto) {
-        log.debug("Update order {}", dto);
-        var orderDto = orderService.saveOrUpdate(dto);
-        return new ResponseEntity<>(orderDto, HttpStatus.OK);
-    }
-
-    @DeleteMapping(path = "/api/v1/orders/{uuid}")
-    public ResponseEntity<OrderDto> deleteOrder(@PathVariable String uuid) {
-        log.debug("Delete order with uuid {}", uuid);
-        var optnOrderDto = orderService.deleteByUuid(uuid);
+    @DeleteMapping(path = "/api/v1/clients/{clientUuid}/shops/{shopUuid}/workplaces/{workplaceUuid}/orders/{orderUuid}")
+    public ResponseEntity<OrderDto> deleteOrder(
+            @PathVariable String clientUuid,
+            @PathVariable String shopUuid,
+            @PathVariable String orderUuid) {
+        log.debug("Delete order by uuid {}", orderUuid);
+        var optnOrderDto = orderService.deleteByClientAndShopAndUuid(clientUuid, shopUuid, orderUuid);
         return new ResponseEntity<>(optnOrderDto.orElse(new OrderDto()), HttpStatus.OK);
     }
 }

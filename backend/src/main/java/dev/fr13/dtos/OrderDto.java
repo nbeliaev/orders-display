@@ -6,6 +6,8 @@ import java.util.List;
 
 public class OrderDto {
     private String uuid;
+    private String client;
+    private String shop;
     private long timestamp;
     private String table;
     private List<OrderItemDto> items = new ArrayList<>();
@@ -25,6 +27,22 @@ public class OrderDto {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
+    }
+
+    public String getShop() {
+        return shop;
+    }
+
+    public void setShop(String shop) {
+        this.shop = shop;
     }
 
     public long getTimestamp() {
@@ -58,16 +76,16 @@ public class OrderDto {
 
         OrderDto orderDto = (OrderDto) o;
 
-        if (timestamp != orderDto.timestamp) return false;
         if (!uuid.equals(orderDto.uuid)) return false;
-        return table.equals(orderDto.table);
+        if (!client.equals(orderDto.client)) return false;
+        return shop.equals(orderDto.shop);
     }
 
     @Override
     public int hashCode() {
         int result = uuid.hashCode();
-        result = 31 * result + (int) (timestamp ^ (timestamp >>> 32));
-        result = 31 * result + table.hashCode();
+        result = 31 * result + client.hashCode();
+        result = 31 * result + shop.hashCode();
         return result;
     }
 
@@ -75,6 +93,8 @@ public class OrderDto {
     public String toString() {
         return "OrderDto{" +
                 "uuid='" + uuid + '\'' +
+                ", client='" + client + '\'' +
+                ", shop='" + shop + '\'' +
                 ", timestamp=" + timestamp +
                 ", table='" + table + '\'' +
                 '}';

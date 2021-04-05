@@ -14,5 +14,5 @@ public interface WorkplaceRepository extends MongoRepository<Workplace, String> 
 
     Optional<Workplace> findByUuid(String uuid);
 
-    Optional<Workplace> findByUuidAndShopAndClient(String uuid, Shop shop, Client client);
+    Optional<Workplace> findByUuidAndShopAndClientAndActiveTrue(String uuid, Shop shop, Client client);
 }
