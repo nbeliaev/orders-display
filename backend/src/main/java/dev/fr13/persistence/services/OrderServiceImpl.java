@@ -11,6 +11,7 @@ import dev.fr13.util.convertor.Convertor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -52,7 +53,9 @@ public class OrderServiceImpl implements OrderService {
 
         log.debug("Find all orders by client {}, shop {} and workplace {}",
                 client.getName(), shop.getName(), workplace.getName());
-        var orders = repository.findAllByClientAndShop(client, shop);
+        var orders = repository.findAllByClientAndShop(
+                client, shop, Sort.by(Sort.Direction.DESC, "timestamp"));
+
         var result = new ArrayList<Order>();
         for (Order order : orders) {
             var isThereSuitableItems = order.getItems().stream()
@@ -66,7 +69,7 @@ public class OrderServiceImpl implements OrderService {
                 result.add(tempOrder);
             }
         }
-        return convertor.listEntitiesToListDtos(sortByTimestamp(result));
+        return convertor.listEntitiesToListDtos(result);
     }
 
     @Override
@@ -103,11 +106,5 @@ public class OrderServiceImpl implements OrderService {
         log.debug("Delete order by client {}, shop {} and uuid {}", client.getName(), shop.getName(), orderUuid);
         var optnOrder = repository.deleteByUuidAndClientAndShop(orderUuid, client, shop);
         return optnOrder.map(convertor::toDto);
-    }
-
-    private List<Order> sortByTimestamp(Collection<Order> orders) {
-        return orders.stream()
-                .sorted(Comparator.comparingLong(Order::getTimestamp))
-                .collect(Collectors.toList());
     }
 }
