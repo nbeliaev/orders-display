@@ -3,13 +3,15 @@ package dev.fr13.dtos;
 public class ClientDto {
     private String uuid;
     private String name;
+    private boolean active;
 
     public ClientDto() {
     }
 
-    public ClientDto(String uuid, String name) {
+    public ClientDto(String uuid, String name, boolean active) {
         this.uuid = uuid;
         this.name = name;
+        this.active = active;
     }
 
     public String getUuid() {
@@ -26,6 +28,14 @@ public class ClientDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override
@@ -51,6 +61,7 @@ public class ClientDto {
         return "ClientDto{" +
                 "uuid='" + uuid + '\'' +
                 ", name='" + name + '\'' +
+                ", active=" + active +
                 '}';
     }
 }

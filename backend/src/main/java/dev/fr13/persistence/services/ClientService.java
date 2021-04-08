@@ -12,5 +12,5 @@ public interface ClientService {
 
     List<ClientDto> findAll();
 
-    Optional<Client> findByUuid(String uuid);
+    Optional<Client> findByUuidAndActive(String uuid);
 }

@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> findByClientAndShopAndWorkplace(String clientUuid, String shopUuid, String workplaceUuid) {
-        var client = clientService.findByUuid(clientUuid)
+        var client = clientService.findByUuidAndActive(clientUuid)
                 .orElseThrow(() -> new NoSuchClientException(clientUuid));
         var shop = shopService.findByUuidAndClient(shopUuid, client)
                 .orElseThrow(() -> new NoSuchShopException(shopUuid));
@@ -74,7 +74,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto saveOrUpdate(OrderDto dto) {
-        var client = clientService.findByUuid(dto.getClient())
+        var client = clientService.findByUuidAndActive(dto.getClient())
                 .orElseThrow(() -> new NoSuchClientException(dto.getClient()));
         var shop = shopService.findByUuidAndClient(dto.getShop(), client)
                 .orElseThrow(() -> new NoSuchShopException(dto.getShop()));
@@ -98,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Optional<OrderDto> deleteByClientAndShopAndUuid(String clientUuid, String shopUuid, String orderUuid) {
-        var client = clientService.findByUuid(clientUuid)
+        var client = clientService.findByUuidAndActive(clientUuid)
                 .orElseThrow(() -> new NoSuchClientException(clientUuid));
         var shop = shopService.findByUuidAndClient(shopUuid, client)
                 .orElseThrow(() -> new NoSuchShopException(shopUuid));

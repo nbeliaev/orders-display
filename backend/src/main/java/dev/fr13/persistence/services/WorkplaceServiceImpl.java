@@ -38,7 +38,7 @@ public class WorkplaceServiceImpl implements WorkplaceService {
     @Override
     public List<WorkplaceDto> findAllActiveByShopIdAndClientId(String shopId, String clientId) {
         log.debug("Find all active workplaces by client id {} and shop id {}", clientId, shopId);
-        var client = clientService.findByUuid(clientId).orElseThrow(
+        var client = clientService.findByUuidAndActive(clientId).orElseThrow(
                 () -> new NoSuchClientException(clientId));
         var shop = shopService.findByUuidAndClient(shopId, client)
                 .orElseThrow(() -> new NoSuchShopException(shopId));
@@ -61,7 +61,7 @@ public class WorkplaceServiceImpl implements WorkplaceService {
 
     @Override
     public WorkplaceDto save(WorkplaceDto dto) {
-        var client = clientService.findByUuid(dto.getClient())
+        var client = clientService.findByUuidAndActive(dto.getClient())
                 .orElseThrow(() -> new NoSuchClientException(dto.getClient()));
         var shop = shopService.findByUuidAndClient(dto.getShop(), client)
                 .orElseThrow(() -> new NoSuchShopException(dto.getShop()));

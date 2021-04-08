@@ -9,18 +9,20 @@ public class Client {
     @Indexed
     private String uuid;
     private String name;
+    private boolean active;
 
     public Client() {
     }
 
-    public Client(String id, String uuid, String name) {
+    public Client(String id, String uuid, String name, boolean active) {
         this.id = id;
         this.uuid = uuid;
         this.name = name;
+        this.active = active;
     }
 
     public Client(String uuid, String name) {
-        this("", uuid, name);
+        this("", uuid, name, true);
     }
 
     public String getId() {
@@ -45,6 +47,14 @@ public class Client {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override
@@ -73,6 +83,7 @@ public class Client {
                 "id='" + id + '\'' +
                 ", uuid='" + uuid + '\'' +
                 ", name='" + name + '\'' +
+                ", active=" + active +
                 '}';
     }
 }

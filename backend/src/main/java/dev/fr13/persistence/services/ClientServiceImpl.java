@@ -13,14 +13,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ClientServiceMongoImpl implements ClientService {
-    private static final Logger log = LoggerFactory.getLogger(ClientServiceMongoImpl.class);
+public class ClientServiceImpl implements ClientService {
+    private static final Logger log = LoggerFactory.getLogger(ClientServiceImpl.class);
 
     private final ClientRepository repository;
     private final Convertor<Client, ClientDto> convertor;
 
-    public ClientServiceMongoImpl(ClientRepository repository,
-                                  @Qualifier("client") Convertor<Client, ClientDto> convertor) {
+    public ClientServiceImpl(ClientRepository repository,
+                             @Qualifier("client") Convertor<Client, ClientDto> convertor) {
         this.repository = repository;
         this.convertor = convertor;
     }
@@ -42,8 +42,8 @@ public class ClientServiceMongoImpl implements ClientService {
     }
 
     @Override
-    public Optional<Client> findByUuid(String uuid) {
+    public Optional<Client> findByUuidAndActive(String uuid) {
         log.debug("Find client by uuid {}", uuid);
-        return repository.findByUuid(uuid);
+        return repository.findByUuidAndActiveTrue(uuid);
     }
 }

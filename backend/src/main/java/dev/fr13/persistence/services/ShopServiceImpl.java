@@ -15,16 +15,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ShopServiceMongoImpl implements ShopService {
-    private static final Logger log = LoggerFactory.getLogger(ShopServiceMongoImpl.class);
+public class ShopServiceImpl implements ShopService {
+    private static final Logger log = LoggerFactory.getLogger(ShopServiceImpl.class);
 
     private final ShopRepository repository;
     private final ClientService clientService;
     private final Convertor<Shop, ShopDto> convertor;
 
-    public ShopServiceMongoImpl(ShopRepository repository,
-                                ClientService clientService,
-                                @Qualifier("shop") Convertor<Shop, ShopDto> convertor) {
+    public ShopServiceImpl(ShopRepository repository,
+                           ClientService clientService,
+                           @Qualifier("shop") Convertor<Shop, ShopDto> convertor) {
         this.repository = repository;
         this.clientService = clientService;
         this.convertor = convertor;
@@ -43,7 +43,7 @@ public class ShopServiceMongoImpl implements ShopService {
     }
 
     @Override
-    public List<ShopDto> findAll() {
+    public List<ShopDto> findAllByClientId() {
         log.debug("Get shops list");
         return convertor.listEntitiesToListDtos(repository.findAll());
     }
@@ -55,6 +55,6 @@ public class ShopServiceMongoImpl implements ShopService {
     }
 
     private Client findClientByUuid(String uuid) {
-        return clientService.findByUuid(uuid).orElseThrow(() -> new NoSuchClientException(uuid));
+        return clientService.findByUuidAndActive(uuid).orElseThrow(() -> new NoSuchClientException(uuid));
     }
 }
