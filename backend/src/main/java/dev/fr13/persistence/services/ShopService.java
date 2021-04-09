@@ -13,5 +13,5 @@ public interface ShopService {
 
     List<ShopDto> findAllByClientId();
 
-    Optional<Shop> findByUuidAndClient(String uuid, Client client);
+    Optional<Shop> findByUuidAndClientAndActive(String uuid, Client client);
 }

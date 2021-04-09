@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface ShopRepository extends MongoRepository<Shop, String> {
 
-    Optional<Shop> findByUuidAndClient(String uuid, Client client);
+    Optional<Shop> findByUuidAndClientAndActiveTrue(String uuid, Client client);
 }

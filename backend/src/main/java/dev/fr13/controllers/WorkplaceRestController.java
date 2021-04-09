@@ -32,6 +32,6 @@ public class WorkplaceRestController {
     public ResponseEntity<WorkplaceDto> saveWorkplace(@RequestBody WorkplaceDto workplaceDto) {
         log.debug("Save workplace {}", workplaceDto);
         var workplace = workplaceService.save(workplaceDto);
-        return new ResponseEntity<>(workplace, HttpStatus.CREATED);
+        return new ResponseEntity<>(workplace, HttpStatus.OK);
     }
 }

@@ -94,7 +94,6 @@ public class OrderDto {
         return "OrderDto{" +
                 "uuid='" + uuid + '\'' +
                 ", client='" + client + '\'' +
-                ", shop='" + shop + '\'' +
                 ", timestamp=" + timestamp +
                 ", table='" + table + '\'' +
                 '}';

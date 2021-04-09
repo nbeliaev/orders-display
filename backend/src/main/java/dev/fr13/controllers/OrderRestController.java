@@ -31,14 +31,14 @@ public class OrderRestController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/api/v1/clients/{clientUuid}/shops/{shopUuid}/workplaces/{workplaceUuid}/orders")
+    @PostMapping(path = "/api/v1/clients/{clientUuid}/shops/{shopUuid}/orders")
     public ResponseEntity<OrderDto> saveOrUpdateOrder(@RequestBody OrderDto dto) {
         log.debug("Received order {}", dto);
-        var orderDto = orderService.saveOrUpdate(dto);
-        return new ResponseEntity<>(orderDto, HttpStatus.ACCEPTED);
+        var orderDto = orderService.save(dto);
+        return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/api/v1/clients/{clientUuid}/shops/{shopUuid}/workplaces/{workplaceUuid}/orders/{orderUuid}")
+    @DeleteMapping(path = "/api/v1/clients/{clientUuid}/shops/{shopUuid}/orders/{orderUuid}")
     public ResponseEntity<OrderDto> deleteOrder(
             @PathVariable String clientUuid,
             @PathVariable String shopUuid,

@@ -32,13 +32,13 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public ShopDto save(ShopDto dto) {
-        log.debug("Save shop {}", dto);
         var client = clientService.findByUuidAndActive(dto.getClient())
                 .orElseThrow(() -> new NoSuchClientException(dto.getClient()));
         var shop = convertor.toEntity(dto);
         shop.setClient(client);
-        repository.findByUuidAndClient(dto.getUuid(), client).
+        repository.findByUuidAndClientAndActiveTrue(dto.getUuid(), client).
                 ifPresent(i -> shop.setId(i.getId()));
+        log.debug("Save shop {}", dto);
         var persisted = repository.save(shop);
         return convertor.toDto(persisted);
     }
@@ -50,8 +50,8 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public Optional<Shop> findByUuidAndClient(String uuid, Client client) {
+    public Optional<Shop> findByUuidAndClientAndActive(String uuid, Client client) {
         log.debug("Find shop by uuid {} and client {}", uuid, client);
-        return repository.findByUuidAndClient(uuid, client);
+        return repository.findByUuidAndClientAndActiveTrue(uuid, client);
     }
 }

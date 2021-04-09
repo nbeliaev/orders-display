@@ -9,7 +9,7 @@ public interface OrderService {
 
     List<OrderDto> findByClientAndShopAndWorkplace(String clientUuid, String shopUuid, String workplaceUuid);
 
-    OrderDto saveOrUpdate(OrderDto dto);
+    OrderDto save(OrderDto dto);
 
     Optional<OrderDto> deleteByClientAndShopAndUuid(String clientUuid, String shopUuid, String orderUuid);
 }

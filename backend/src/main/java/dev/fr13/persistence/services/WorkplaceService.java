@@ -14,7 +14,5 @@ public interface WorkplaceService {
 
     Optional<Workplace> findByUuidAndShopAndClient(String uuid, Shop shop, Client client);
 
-    Optional<Workplace> findByUuid(String uuid);
-
     WorkplaceDto save(WorkplaceDto dto);
 }

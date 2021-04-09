@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDto> findByClientAndShopAndWorkplace(String clientUuid, String shopUuid, String workplaceUuid) {
         var client = clientService.findByUuidAndActive(clientUuid)
                 .orElseThrow(() -> new NoSuchClientException(clientUuid));
-        var shop = shopService.findByUuidAndClient(shopUuid, client)
+        var shop = shopService.findByUuidAndClientAndActive(shopUuid, client)
                 .orElseThrow(() -> new NoSuchShopException(shopUuid));
         var workplace = workplaceService.findByUuidAndShopAndClient(workplaceUuid, shop, client)
                 .orElseThrow(() -> new NoSuchWorkplaceException(workplaceUuid));
@@ -73,17 +73,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto saveOrUpdate(OrderDto dto) {
-        var client = clientService.findByUuidAndActive(dto.getClient())
-                .orElseThrow(() -> new NoSuchClientException(dto.getClient()));
-        var shop = shopService.findByUuidAndClient(dto.getShop(), client)
-                .orElseThrow(() -> new NoSuchShopException(dto.getShop()));
-
+    public OrderDto save(OrderDto dto) {
         var order = convertor.toEntity(dto);
-        order.setClient(client);
-        order.setShop(shop);
-
-        repository.findByUuidAndClientAndShop(dto.getUuid(), client, shop)
+        repository.findByUuidAndClientAndShop(dto.getUuid(), order.getClient(), order.getShop())
                 .ifPresentOrElse(
                         i -> {
                             order.setId(i.getId());
@@ -100,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
     public Optional<OrderDto> deleteByClientAndShopAndUuid(String clientUuid, String shopUuid, String orderUuid) {
         var client = clientService.findByUuidAndActive(clientUuid)
                 .orElseThrow(() -> new NoSuchClientException(clientUuid));
-        var shop = shopService.findByUuidAndClient(shopUuid, client)
+        var shop = shopService.findByUuidAndClientAndActive(shopUuid, client)
                 .orElseThrow(() -> new NoSuchShopException(shopUuid));
 
         log.debug("Delete order by client {}, shop {} and uuid {}", client.getName(), shop.getName(), orderUuid);

@@ -40,7 +40,7 @@ public class WorkplaceServiceImpl implements WorkplaceService {
         log.debug("Find all active workplaces by client id {} and shop id {}", clientId, shopId);
         var client = clientService.findByUuidAndActive(clientId).orElseThrow(
                 () -> new NoSuchClientException(clientId));
-        var shop = shopService.findByUuidAndClient(shopId, client)
+        var shop = shopService.findByUuidAndClientAndActive(shopId, client)
                 .orElseThrow(() -> new NoSuchShopException(shopId));
 
         var workplaces = repository.findAllByShopAndClientAndActiveTrue(shop, client);
@@ -54,16 +54,10 @@ public class WorkplaceServiceImpl implements WorkplaceService {
     }
 
     @Override
-    public Optional<Workplace> findByUuid(String uuid) {
-        log.debug("Find workplace by uuid {}", uuid);
-        return repository.findByUuid(uuid);
-    }
-
-    @Override
     public WorkplaceDto save(WorkplaceDto dto) {
         var client = clientService.findByUuidAndActive(dto.getClient())
                 .orElseThrow(() -> new NoSuchClientException(dto.getClient()));
-        var shop = shopService.findByUuidAndClient(dto.getShop(), client)
+        var shop = shopService.findByUuidAndClientAndActive(dto.getShop(), client)
                 .orElseThrow(() -> new NoSuchShopException(dto.getShop()));
 
         var workplace = convertor.toEntity(dto);
