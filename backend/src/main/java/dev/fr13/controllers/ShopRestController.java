@@ -24,7 +24,7 @@ public class ShopRestController {
     public ResponseEntity<ShopDto> saveShop(@RequestBody ShopDto shop) {
         log.debug("Save shop {}", shop);
         var persisted = shopService.save(shop);
-        return new ResponseEntity<>(persisted, HttpStatus.CREATED);
+        return new ResponseEntity<>(persisted, HttpStatus.OK);
     }
 
     @GetMapping(path = "/api/v1/clients/{clientUuid}/shops")

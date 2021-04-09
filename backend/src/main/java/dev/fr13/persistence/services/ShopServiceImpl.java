@@ -33,8 +33,9 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public ShopDto save(ShopDto dto) {
         log.debug("Save shop {}", dto);
+        var client = clientService.findByUuidAndActive(dto.getClient())
+                .orElseThrow(() -> new NoSuchClientException(dto.getClient()));
         var shop = convertor.toEntity(dto);
-        var client = findClientByUuid(dto.getClient());
         shop.setClient(client);
         repository.findByUuidAndClient(dto.getUuid(), client).
                 ifPresent(i -> shop.setId(i.getId()));
@@ -52,9 +53,5 @@ public class ShopServiceImpl implements ShopService {
     public Optional<Shop> findByUuidAndClient(String uuid, Client client) {
         log.debug("Find shop by uuid {} and client {}", uuid, client);
         return repository.findByUuidAndClient(uuid, client);
-    }
-
-    private Client findClientByUuid(String uuid) {
-        return clientService.findByUuidAndActive(uuid).orElseThrow(() -> new NoSuchClientException(uuid));
     }
 }
