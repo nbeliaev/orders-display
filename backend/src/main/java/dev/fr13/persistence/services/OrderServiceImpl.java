@@ -61,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
             var isThereSuitableItems = order.getItems().stream()
                     .anyMatch(i -> i.getWorkplace().equals(workplace));
             if (isThereSuitableItems) {
-                var tempOrder = new Order(order.getUuid(), order.getTimestamp(), order.getTable());
+                var tempOrder = new Order(order);
                 var items = order.getItems().stream()
                         .filter(i -> i.getWorkplace().equals(workplace))
                         .collect(Collectors.toCollection(ArrayList::new));

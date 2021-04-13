@@ -32,6 +32,15 @@ public class Order {
         this.table = table;
     }
 
+    public Order(Order copy) {
+        this.id = copy.getId();
+        this.uuid = copy.uuid;
+        this.client = copy.getClient();
+        this.shop = copy.getShop();
+        this.timestamp = copy.getTimestamp();
+        this.table = copy.getTable();
+    }
+
     public String getId() {
         return id;
     }
