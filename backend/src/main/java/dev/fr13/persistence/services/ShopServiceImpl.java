@@ -44,9 +44,11 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public List<ShopDto> findAllByClientId() {
-        log.debug("Get shops list");
-        return convertor.listEntitiesToListDtos(repository.findAll());
+    public List<ShopDto> findAllByClientUuid(String clientUuid) {
+        var client = clientService.findByUuidAndActive(clientUuid)
+                .orElseThrow(() -> new NoSuchClientException(clientUuid));
+        log.debug("Get shops list by client {}", client);
+        return convertor.listEntitiesToListDtos(repository.findAllByClientAndActiveTrue(client));
     }
 
     @Override
