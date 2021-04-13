@@ -28,9 +28,9 @@ public class ShopRestController {
     }
 
     @GetMapping(path = "/api/v1/clients/{clientUuid}/shops")
-    public ResponseEntity<List<ShopDto>> getShops(@PathVariable String clientId) {
-        log.debug("Get shops list");
-        var shops = shopService.findAllByClientId();
+    public ResponseEntity<List<ShopDto>> getShops(@PathVariable String clientUuid) {
+        log.debug("Get shops list by client uuid {}", clientUuid);
+        var shops = shopService.findAllByClientUuid(clientUuid);
         return new ResponseEntity<>(shops, HttpStatus.OK);
     }
 }
