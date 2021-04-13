@@ -1,17 +1,13 @@
 import {createWebHistory, createRouter} from 'vue-router'
-import WorkplaceList from '@/components/WorkplaceList'
+import ShopList from "@/components/ShopList";
 
 const history = createWebHistory()
 const index = createRouter({
     history,
     routes: [
         {
-            path: '/',
-            component: WorkplaceList
-        },
-        {
-            path: '/workplace/:id',
-            component: () => import('@/components/OrderList')
+            path: '/clients/:clientUuid/shops',
+            component: ShopList
         }
     ]
 })
