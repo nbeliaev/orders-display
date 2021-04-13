@@ -20,7 +20,7 @@ public class OrderItemsProcessor {
         log.debug("Processing of statuses and rows numbers for a new order");
         var items = order.getItems();
         if (noEmptyStatuses(items)) {
-            log.debug("No empty statuses");
+            log.debug("Found no empty statuses");
             return;
         }
         for (int i = 0; i < items.size(); i++) {
@@ -31,15 +31,30 @@ public class OrderItemsProcessor {
 
     public void refillStatusesAndRowsNumbers(Order source, Order destn) {
         var items = destn.getItems();
-        if (noEmptyStatuses(items)) {
-            log.debug("No empty statuses");
-            return;
-        }
-
         var persistedItems = source.getItems();
-        var newItems = newItemsByPersistedItems(persistedItems, items);
-        destn.setItems(newItems);
+        if (noEmptyStatuses(items)) {
+            log.debug("Found no empty statuses");
+            var newItems = addPersistedItems(persistedItems, items);
+            destn.setItems(newItems);
+        } else {
+            var newItems = newItemsByPersistedItems(persistedItems, items);
+            destn.setItems(newItems);
+        }
+    }
 
+    private List<OrderItem> addPersistedItems(List<OrderItem> persistedItems, List<OrderItem> items) {
+        var result = new ArrayList<>(items);
+        var currentWorkplace = items.stream()
+                .map(OrderItem::getWorkplace)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Found no workplace."));
+
+        var itemsByOthersWorkplaces = persistedItems.stream()
+                .filter(i -> !i.getWorkplace().equals(currentWorkplace))
+                .collect(Collectors.toList());
+
+        result.addAll(itemsByOthersWorkplaces);
+        return getSortedItems(result);
     }
 
     private List<OrderItem> newItemsByPersistedItems(List<OrderItem> persistedItems, List<OrderItem> items) {
