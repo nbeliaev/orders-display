@@ -24,7 +24,7 @@ export default {
     }
   },
   async mounted() {
-    this.fetchOrders(this.workplaceId)
+    this.fetchOrders(this.queryParams)
     this.pollData()
   },
   beforeUnmount() {
@@ -38,8 +38,12 @@ export default {
   },
   computed: {
     ...mapGetters(['allOrders']),
-    workplaceId() {
-      return this.$route.params.id
+    queryParams() {
+      return {
+        clientUuid: this.$route.params.clientUuid,
+        shopUuid: this.$route.params.shopUuid,
+        workplaceUuid: this.$route.params.workplaceUuid
+      }
     },
     sortedOrders() {
       return this.allOrders.slice().sort((i1, i2) => {
@@ -52,9 +56,11 @@ export default {
   methods: {
     ...mapActions(['fetchOrders', 'clearState']),
     pollData() {
-      this.polling = setInterval(this.fetchOrders, 15_000, this.workplaceId)
+      this.polling = setInterval(
+          this.fetchOrders,
+          15_000,
+          this.queryParams)
     }
   }
-
 }
 </script>

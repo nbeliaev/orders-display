@@ -4,8 +4,9 @@ import ORDER_ITEM_STATUSES from '@/enums/order-item-statuses-enum'
 
 export default {
     actions: {
-        async fetchOrders(ctx, workplaceId) {
-            const resp = await fetch("/api/v1/orders?filter=" + workplaceId)
+        async fetchOrders(ctx, params) {
+            const url = '/api/v1/clients/' + params.clientUuid + '/shops/' + params.shopUuid + '/workplaces/' + params.workplaceUuid + '/orders'
+            const resp = await fetch(url)
             const data = await resp.json()
             ctx.commit('updateOrders', data)
         },
@@ -19,10 +20,11 @@ export default {
                 status: newStatus
             })
 
+            const url = '/api/v1/clients/' + data.order.client + '/shops/' + data.order.shop + '/orders'
             const resp = await fetch(
-                "/api/v1/orders",
+                url,
                 {
-                    method: HTTP_METHODS.PATCH,
+                    method: HTTP_METHODS.POST,
                     headers: {
                         'Content-Type': 'application/json;charset=utf-8'
                     },
