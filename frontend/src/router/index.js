@@ -8,6 +8,10 @@ const index = createRouter({
         {
             path: '/clients/:clientUuid/shops',
             component: ShopList
+        },
+        {
+            path: '/clients/:clientUuid/shops/:shopUuid',
+            component: () => import('@/components/WorkplaceList')
         }
     ]
 })

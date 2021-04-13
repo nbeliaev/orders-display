@@ -8,7 +8,7 @@
               class="list-group-item text-center"
               v-for="shop in allShops"
               :key="shop.uuid">
-            <router-link :to="`/client/${shop.client}/shops/${shop.uuid}`"
+            <router-link :to="`/clients/${shop.client}/shops/${shop.uuid}`"
                          tag="button"
                          class="btn btn-outline-dark btn-lg btn-block">
               {{ shop.name }}

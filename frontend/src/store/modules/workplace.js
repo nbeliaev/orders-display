@@ -1,7 +1,8 @@
 export default {
     actions: {
-        async fetchWorkplaces(ctx) {
-            const resp = await fetch('/api/v1/workplaces')
+        async fetchWorkplaces(ctx, params) {
+            const url = '/api/v1/clients/' + params.clientUuid + '/shops/' + params.shopUuid + '/workplaces'
+            const resp = await fetch(url)
             const data = await resp.json()
             ctx.commit('updateWorkplaces', data)
         }
