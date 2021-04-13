@@ -9,7 +9,7 @@
               v-for="workplace in allWorkplaces"
               :key="workplace.id">
             <router-link
-                :to="`/clients/${workplace.client}/shops/${workplace.shop}/workplaces/${workplace.uuid}`"
+                :to="`/clients/${workplace.client}/shops/${workplace.shop}/workplaces/${workplace.uuid}/orders`"
                 tag="button"
                 class="btn btn-outline-dark btn-lg btn-block">
               {{ workplace.name }}
@@ -27,19 +27,16 @@ import {mapGetters, mapActions} from 'vuex'
 export default {
   computed: {
     ...mapGetters(['allWorkplaces']),
-    clientUuid() {
-      return this.$route.params.clientUuid
-    },
-    shopUuid() {
-      return this.$route.params.shopUuid
+    queryParams() {
+      return {
+        clientUuid: this.$route.params.clientUuid,
+        shopUuid: this.$route.params.shopUuid,
+      }
     }
   },
   methods: mapActions(['fetchWorkplaces']),
   async mounted() {
-    this.fetchWorkplaces({
-      clientUuid: this.clientUuid,
-      shopUuid: this.shopUuid
-    })
+    this.fetchWorkplaces(this.queryParams)
   }
 }
 
