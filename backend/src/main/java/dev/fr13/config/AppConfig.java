@@ -36,7 +36,7 @@ public class AppConfig {
 
         mapper.createTypeMap(Order.class, OrderDto.class)
                 .addMapping(
-                        Order::getClientUud,
+                        Order::getClientUuid,
                         OrderDto::setClient
                 )
                 .addMapping(

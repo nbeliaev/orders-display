@@ -89,7 +89,7 @@ public class Order {
         return client;
     }
 
-    public String getClientUud() {
+    public String getClientUuid() {
         return client.getUuid();
     }
 
@@ -142,8 +142,8 @@ public class Order {
                 ", uuid='" + uuid + '\'' +
                 ", timestamp=" + timestamp +
                 ", table='" + table + '\'' +
-                ", shop=" + shop +
-                ", client=" + client +
+                ", shop=" + shop.getName() +
+                ", client=" + client.getName() +
                 '}';
     }
 }
