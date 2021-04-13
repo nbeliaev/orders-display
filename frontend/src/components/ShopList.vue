@@ -8,7 +8,7 @@
               class="list-group-item text-center"
               v-for="shop in allShops"
               :key="shop.uuid">
-            <router-link :to="`/clients/${shop.client}/shops/${shop.uuid}`"
+            <router-link :to="`/clients/${shop.client}/shops/${shop.uuid}/workplaces`"
                          tag="button"
                          class="btn btn-outline-dark btn-lg btn-block">
               {{ shop.name }}
@@ -26,13 +26,13 @@ import {mapGetters, mapActions} from 'vuex'
 export default {
   computed: {
     ...mapGetters(['allShops']),
-    clientId() {
+    clientUuid() {
       return this.$route.params.clientUuid
     },
   },
   methods: mapActions(['fetchShops']),
-  mounted() {
-    this.fetchShops(this.clientId)
+  async mounted() {
+    this.fetchShops(this.clientUuid)
   }
 }
 

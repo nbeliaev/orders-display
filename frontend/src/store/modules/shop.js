@@ -1,7 +1,7 @@
 export default {
     actions: {
-        async fetchShops(ctx, clientId) {
-            const url = '/api/v1/clients/' + clientId + '/shops'
+        async fetchShops(ctx, clientUuid) {
+            const url = '/api/v1/clients/' + clientUuid + '/shops'
             const resp = await fetch(url)
             const data = await resp.json()
             ctx.commit('updateShops', data)
