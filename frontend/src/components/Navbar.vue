@@ -22,20 +22,16 @@
           </div>
         </div>
       </div>
-
-      <LanguageToggler/>
-
     </div>
   </nav>
 </template>
 
 <script>
-import LanguageToggler from "@/components/LanguageToggler";
 import Breadcrumbs from "./Breadcrumbs";
 
 export default {
   components: {
-    Breadcrumbs, LanguageToggler
+    Breadcrumbs
   },
   computed: {
     showWorkplace() {
