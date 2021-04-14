@@ -12,7 +12,7 @@ const index = createRouter({
             meta: {
                 breadcrumbs: [
                     {
-                        name: 'shops'
+                        name: 'Shops'
                     }
                 ]
             }
@@ -24,11 +24,11 @@ const index = createRouter({
             meta: {
                 breadcrumbs: [
                     {
-                        name: 'shops',
+                        name: 'Shops',
                         link: '/clients/:clientUuid/shops'
                     },
                     {
-                        name: 'workplaces'
+                        name: 'Workplaces'
                     }
                 ]
             }
@@ -40,15 +40,15 @@ const index = createRouter({
             meta: {
                 breadcrumbs: [
                     {
-                        name: 'shops',
+                        name: 'Shops',
                         link: '/clients/:clientUuid/shops'
                     },
                     {
-                        name: 'workplaces',
+                        name: 'Workplaces',
                         link: '/clients/:clientUuid/shops/:shopUuid/workplaces'
                     },
                     {
-                        name: 'orders'
+                        name: 'Orders'
                     },
                 ]
             }

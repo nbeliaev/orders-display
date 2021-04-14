@@ -1,24 +1,24 @@
 <template>
-  <nav class="navbar navbar-expand-md navbar-light bg-light mb-1">
+  <nav class="navbar navbar-expand-md navbar-light bg-light ptb-0">
     <div class="navbar-collapse" id="navbarSupportedContent">
-
-      <Breadcrumbs/>
-
-      <div class="container-fluid" v-if="showWorkplace">
-        <div class="row justify-content-md-center">
-          <div class="col-md-auto">
-            <div class="mx-3">
-              <h5>
-                Workplace: <strong>DUMMY</strong>
-              </h5>
-            </div>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-9">
+            <Breadcrumbs/>
           </div>
-          <div class="col-md-auto">
-            <div class="mx-3">
-              <h5>
-                Active orders: <strong>{{ activeOrdersNumber || 0 }}</strong>
-              </h5>
-            </div>
+          <div
+              class="col d-flex justify-content-end"
+              v-if="showWorkplace">
+            <p class="fs-5">
+              Workplace: <span class="fw-bold">{{ workplace.name }}</span>
+            </p>
+          </div>
+          <div
+              class="col d-flex justify-content-end"
+              v-if="showWorkplace">
+            <p class="fs-5">
+              Active orders: <span class="fw-bold">{{ activeOrdersNumber || 0 }}</span>
+            </p>
           </div>
         </div>
       </div>
@@ -38,7 +38,7 @@ export default {
       return this.$store.getters.showWorkplace
     },
     workplace() {
-      return this.$store.getters.findWorkplaceById(this.$route.params.id)
+      return this.$store.getters.findWorkplaceById(this.$route.params.workplaceUuid)
     },
     activeOrdersNumber() {
       return this.$store.getters.activeOrdersNumber

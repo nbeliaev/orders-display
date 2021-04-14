@@ -1,7 +1,7 @@
 <template>
   <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"
+      <li class="breadcrumb-item fs-5"
           v-for="(breadcrumb, ind) in allBreadcrumbs"
           :key="ind"
           @click="routeTo(ind)"
