@@ -2,12 +2,14 @@
   <nav class="navbar navbar-expand-md navbar-light bg-light mb-1">
     <div class="navbar-collapse" id="navbarSupportedContent">
 
-      <div class="container-fluid">
+      <Breadcrumbs/>
+
+      <div class="container-fluid" v-if="showWorkplace">
         <div class="row justify-content-md-center">
           <div class="col-md-auto">
             <div class="mx-3">
               <h5>
-                Workplace: <strong>{{ workplace.name }}</strong>
+                Workplace: <strong>DUMMY</strong>
               </h5>
             </div>
           </div>
@@ -29,12 +31,16 @@
 
 <script>
 import LanguageToggler from "@/components/LanguageToggler";
+import Breadcrumbs from "./Breadcrumbs";
 
 export default {
   components: {
-    LanguageToggler
+    Breadcrumbs, LanguageToggler
   },
   computed: {
+    showWorkplace() {
+      return this.$store.getters.showWorkplace
+    },
     workplace() {
       return this.$store.getters.findWorkplaceById(this.$route.params.id)
     },

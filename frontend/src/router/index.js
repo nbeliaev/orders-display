@@ -7,15 +7,51 @@ const index = createRouter({
     routes: [
         {
             path: '/clients/:clientUuid/shops',
-            component: ShopList
+            name: 'shops',
+            component: ShopList,
+            meta: {
+                breadcrumbs: [
+                    {
+                        name: 'shops'
+                    }
+                ]
+            }
         },
         {
             path: '/clients/:clientUuid/shops/:shopUuid/workplaces',
-            component: () => import('@/components/WorkplaceList')
+            name: 'workplaces',
+            component: () => import('@/components/WorkplaceList'),
+            meta: {
+                breadcrumbs: [
+                    {
+                        name: 'shops',
+                        link: '/clients/:clientUuid/shops'
+                    },
+                    {
+                        name: 'workplaces'
+                    }
+                ]
+            }
         },
         {
             path: '/clients/:clientUuid/shops/:shopUuid/workplaces/:workplaceUuid/orders',
-            component: () => import('@/components/OrderList')
+            name: 'orders',
+            component: () => import('@/components/OrderList'),
+            meta: {
+                breadcrumbs: [
+                    {
+                        name: 'shops',
+                        link: '/clients/:clientUuid/shops'
+                    },
+                    {
+                        name: 'workplaces',
+                        link: '/clients/:clientUuid/shops/:shopUuid/workplaces'
+                    },
+                    {
+                        name: 'orders'
+                    },
+                ]
+            }
         }
     ]
 })
