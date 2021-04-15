@@ -56,12 +56,12 @@ export default {
   },
   methods: {
     addTimeDiffUpdater() {
-      this.refreshTimeDiff()
-      setInterval(this.refreshTimeDiff, 30_000)
+      this.calcTimeDiff()
+      setInterval(this.calcTimeDiff, 30_000)
     },
-    refreshTimeDiff() {
+    calcTimeDiff() {
       if (!this.completed) {
-        this.timeDiff = this.timestamp - new Date().getTime()
+        this.timeDiff = new Date().getTime() - this.timestamp
       }
     },
     convertMs(ms) {
