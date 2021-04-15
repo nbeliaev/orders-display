@@ -1,5 +1,6 @@
 <template>
-  <div class="m-2" v-if="allOrders.length !== 0">
+  <Loader v-if="isLoading"/>
+  <div class="m-2" v-else-if="!isLoading && sortedOrders.length !== 0">
     <div class="container-fluid">
       <div class="row">
         <Order
@@ -15,6 +16,7 @@
 
 <script>
 import Order from '@/components/Order'
+import Loader from '@/components/Loader'
 import {mapActions, mapGetters} from 'vuex'
 
 export default {
@@ -34,10 +36,10 @@ export default {
     this.clearState()
   },
   components: {
-    Order
+    Loader, Order
   },
   computed: {
-    ...mapGetters(['allOrders']),
+    ...mapGetters(['allOrders', 'isLoading']),
     queryParams() {
       return {
         clientUuid: this.$route.params.clientUuid,

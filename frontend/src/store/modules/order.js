@@ -5,7 +5,10 @@ import ORDER_ITEM_STATUSES from '@/enums/order-item-statuses-enum'
 export default {
     actions: {
         async fetchOrders(ctx, params) {
-            const url = '/api/v1/clients/' + params.clientUuid + '/shops/' + params.shopUuid + '/workplaces/' + params.workplaceUuid + '/orders'
+            const url = '/api/v1/clients/'
+                + params.clientUuid + '/shops/'
+                + params.shopUuid + '/workplaces/'
+                + params.workplaceUuid + '/orders'
             const resp = await fetch(url)
             const data = await resp.json()
             ctx.commit('updateOrders', data)
@@ -49,6 +52,7 @@ export default {
         },
         updateOrders(state, orders) {
             state.orders = orders
+            state.loading = false
         },
         updateOrderItemStatus(state, data) {
             state.orders
@@ -57,7 +61,8 @@ export default {
     },
     state() {
         return {
-            orders: []
+            orders: [],
+            loading: true,
         }
     },
     getters: {
@@ -70,6 +75,9 @@ export default {
                     ...order, items: order.items.filter(item => item.status !== 'completed')
                 }
             }).filter(i => i.items.length).length
+        },
+        isLoading(state) {
+            return state.loading
         }
     }
 }
