@@ -1,6 +1,7 @@
 package dev.fr13.domain;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,6 +11,8 @@ import java.util.Collections;
 import java.util.List;
 
 @Document("orders")
+@CompoundIndex(name = "client_shop_idx",
+        def = "{'client' : 1, 'shop' : 1}")
 public class Order {
     @Id
     private String id;
