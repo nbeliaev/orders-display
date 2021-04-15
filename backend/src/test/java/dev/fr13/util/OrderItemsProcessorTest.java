@@ -4,6 +4,7 @@ import dev.fr13.domain.Order;
 import dev.fr13.domain.OrderItem;
 import dev.fr13.domain.OrderItemStatus;
 import dev.fr13.domain.Workplace;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,15 +17,20 @@ class OrderItemsProcessorTest {
     private final Workplace workplace1 = new Workplace("dummyUuid1", "dummyWorkplace1");
     private final Workplace workplace2 = new Workplace("dummyUuid2", "dummyWorkplace2");
 
+    private Order order;
+
     private final OrderItemsProcessor processor = new OrderItemsProcessor();
+
+    @BeforeEach
+    void receiveOrder() {
+        order = initNewOrder();
+        processor.setStatusesAndRowsNumbersInNewOrder(order);
+    }
 
     @Test
     @DisplayName("в новом заказе должен установить номера строк и статус Новый для всех строк заказа")
     void shouldSetStatusesAndRowsNumbersInNewOrder() {
-        var newOrder0 = getNewOrder();
-        processor.setStatusesAndRowsNumbersInNewOrder(newOrder0);
-
-        var items = newOrder0.getItems();
+        var items = order.getItems();
         assertThat(items).hasSize(3);
         assertThat(items.get(0).getStatus()).isEqualTo(OrderItemStatus.NEW);
         assertThat(items.get(1).getRowNumber()).isNotZero();
@@ -34,14 +40,11 @@ class OrderItemsProcessorTest {
     @Test
     @DisplayName("должен сохранить текущие статусы и номера строк")
     void shouldKeepCurrentStatusesAndRowsNumbers() {
-        var newOrder0 = getNewOrder();
-        processor.setStatusesAndRowsNumbersInNewOrder(newOrder0);
+        startCookingFirstOrderItem(order);
+        var newOrder0 = initNewOrder();
+        processor.refillStatusesAndRowsNumbers(order, newOrder0);
 
-        startCookingFirstOrderItem(newOrder0);
-        var newOrder1 = getNewOrder();
-        processor.refillStatusesAndRowsNumbers(newOrder0, newOrder1);
-
-        var items = newOrder1.getItems();
+        var items = newOrder0.getItems();
         assertThat(items).hasSize(3);
         assertThat(items.get(0).getStatus()).isEqualTo(OrderItemStatus.IN_PROCESS);
         assertThat(items.get(0).getRowNumber()).isZero();
@@ -54,14 +57,11 @@ class OrderItemsProcessorTest {
     @Test
     @DisplayName("должен сохранить текущие статусы и номера строк и добавить новую строку со статусом Новый")
     void shouldKeepCurrentStatusesAndRowsNumbersAndAddNewRowWithStatusNew() {
-        var newOrder = getNewOrder();
-        processor.setStatusesAndRowsNumbersInNewOrder(newOrder);
+        startCookingFirstOrderItem(order);
+        var newOrder0 = initNewOrder();
+        processor.refillStatusesAndRowsNumbers(order, newOrder0);
 
-        startCookingFirstOrderItem(newOrder);
-        var newOrder0 = getNewOrder();
-        processor.refillStatusesAndRowsNumbers(newOrder, newOrder0);
-
-        var newOrder1 = getNewOrder();
+        var newOrder1 = initNewOrder();
         addNewOrderItemWithEmptyStatus(newOrder1);
         processor.refillStatusesAndRowsNumbers(newOrder0, newOrder1);
 
@@ -83,22 +83,19 @@ class OrderItemsProcessorTest {
     @Test
     @DisplayName("должен разбить строку заказа на строки со статусом Новый и текущим статусом и пронумеровать новую строку")
     void shouldSplitOrderItemOnTwoRowsWithStatusesNewAndCurrentAndSetNumberForNewRow() {
-        var newOrder0 = getNewOrder();
-        processor.setStatusesAndRowsNumbersInNewOrder(newOrder0);
+        startCookingFirstOrderItem(order);
+        var newOrder0 = initNewOrder();
+        processor.refillStatusesAndRowsNumbers(order, newOrder0);
 
-        startCookingFirstOrderItem(newOrder0);
-        var newOrder1 = getNewOrder();
-        processor.refillStatusesAndRowsNumbers(newOrder0, newOrder1);
-
-        var newOrder2 = getNewOrder();
-        var item = newOrder2.getItems().get(0);
+        var newOrder1 = initNewOrder();
+        var item = newOrder1.getItems().get(0);
         var oldQnt = item.getQnt();
         var newQnt = 5;
         item.setQnt(oldQnt + newQnt);
 
-        processor.refillStatusesAndRowsNumbers(newOrder1, newOrder2);
+        processor.refillStatusesAndRowsNumbers(newOrder0, newOrder1);
 
-        var items = newOrder2.getItems();
+        var items = newOrder1.getItems();
         assertThat(items).hasSize(4);
         assertThat(items.get(0).getStatus()).isEqualTo(OrderItemStatus.IN_PROCESS);
         assertThat(items.get(0).getRowNumber()).isZero();
@@ -122,22 +119,19 @@ class OrderItemsProcessorTest {
     @Test
     @DisplayName("должен добавить комментарий к существующей строке")
     void shouldAddNoteForCurrentRow() {
-        var newOrder0 = getNewOrder();
-        processor.setStatusesAndRowsNumbersInNewOrder(newOrder0);
+        startCookingFirstOrderItem(order);
+        var newOrder0 = initNewOrder();
+        processor.refillStatusesAndRowsNumbers(order, newOrder0);
 
-        startCookingFirstOrderItem(newOrder0);
-        var newOrder1 = getNewOrder();
-        processor.refillStatusesAndRowsNumbers(newOrder0, newOrder1);
-
-        var newOrder2 = getNewOrder();
-        var item = newOrder2.getItems().get(0);
+        var newOrder1 = initNewOrder();
+        var item = newOrder1.getItems().get(0);
         var oldQnt = item.getQnt();
         var newQnt = 3;
         item.setQnt(oldQnt - newQnt);
 
-        processor.refillStatusesAndRowsNumbers(newOrder1, newOrder2);
+        processor.refillStatusesAndRowsNumbers(newOrder0, newOrder1);
 
-        var items = newOrder2.getItems();
+        var items = newOrder1.getItems();
         assertThat(items).hasSize(3);
         assertThat(items.get(0).getStatus()).isEqualTo(OrderItemStatus.IN_PROCESS);
         assertThat(items.get(0).getRowNumber()).isZero();
@@ -157,25 +151,22 @@ class OrderItemsProcessorTest {
     @Test
     @DisplayName("должен удалить строку со статусом Новый")
     void shouldDeleteRowWithStatusNew() {
-        var newOrder0 = getNewOrder();
-        processor.setStatusesAndRowsNumbersInNewOrder(newOrder0);
+        startCookingFirstOrderItem(order);
+        var newOrder0 = initNewOrder();
+        processor.refillStatusesAndRowsNumbers(order, newOrder0);
 
-        startCookingFirstOrderItem(newOrder0);
-        var newOrder1 = getNewOrder();
-        processor.refillStatusesAndRowsNumbers(newOrder0, newOrder1);
-
-        var newOrder2 = getNewOrder();
-        var item = newOrder2.getItems().get(0);
+        var newOrder1 = initNewOrder();
+        var item = newOrder1.getItems().get(0);
         var oldQnt = item.getQnt();
         var newQnt = 5;
         item.setQnt(oldQnt + newQnt);
+        processor.refillStatusesAndRowsNumbers(newOrder0, newOrder1);
+
+        var newOrder2 = initNewOrder();
+        newOrder2.getItems().get(0).setQnt(oldQnt);
         processor.refillStatusesAndRowsNumbers(newOrder1, newOrder2);
 
-        var newOrder3 = getNewOrder();
-        newOrder3.getItems().get(0).setQnt(oldQnt);
-        processor.refillStatusesAndRowsNumbers(newOrder2, newOrder3);
-
-        var items = newOrder3.getItems();
+        var items = newOrder2.getItems();
         assertThat(items).hasSize(3);
         assertThat(items.get(0).getStatus()).isEqualTo(OrderItemStatus.IN_PROCESS);
         assertThat(items.get(0).getName()).isEqualTo(item.getName());
@@ -185,30 +176,41 @@ class OrderItemsProcessorTest {
     @Test
     @DisplayName("должен уменьшить количество в строке со статусом Новый")
     void shouldDecreaseQntRowWithStatusNew() {
-        var newOrder0 = getNewOrder();
-        processor.setStatusesAndRowsNumbersInNewOrder(newOrder0);
+        startCookingFirstOrderItem(order);
+        var newOrder0 = initNewOrder();
+        processor.refillStatusesAndRowsNumbers(order, newOrder0);
 
-        startCookingFirstOrderItem(newOrder0);
-        var newOrder1 = getNewOrder();
-        processor.refillStatusesAndRowsNumbers(newOrder0, newOrder1);
-
-        var newOrder2 = getNewOrder();
-        var item = newOrder2.getItems().get(0);
+        var newOrder1 = initNewOrder();
+        var item = newOrder1.getItems().get(0);
         var oldQnt = item.getQnt();
         var newQnt = 5;
         item.setQnt(oldQnt + newQnt);
+        processor.refillStatusesAndRowsNumbers(newOrder0, newOrder1);
+
+        var newOrder2 = initNewOrder();
+        newOrder2.getItems().get(0).setQnt(oldQnt + newQnt - 1);
         processor.refillStatusesAndRowsNumbers(newOrder1, newOrder2);
 
-        var newOrder3 = getNewOrder();
-        newOrder3.getItems().get(0).setQnt(oldQnt + newQnt - 1);
-        processor.refillStatusesAndRowsNumbers(newOrder2, newOrder3);
-
-        var items = newOrder3.getItems();
+        var items = newOrder2.getItems();
         assertThat(items).hasSize(4);
         assertThat(items.get(0).getStatus()).isEqualTo(OrderItemStatus.IN_PROCESS);
         assertThat(items.get(0).getName()).isEqualTo(item.getName());
         assertThat(items.get(3).getStatus()).isEqualTo(OrderItemStatus.NEW);
         assertThat(items.get(3).getQnt()).isEqualTo(newQnt - 1);
+    }
+
+    @Test
+    @DisplayName("должен добавить комментарий к строке заказа")
+    void shouldAddNoteToOrderItem() {
+        var note = "dummy";
+        startCookingFirstOrderItem(order);
+        var newOrder0 = initNewOrder();
+        newOrder0.getItems().get(0).setNote(note);
+        processor.refillStatusesAndRowsNumbers(order, newOrder0);
+
+        var items = newOrder0.getItems();
+        assertThat(items).hasSize(3);
+        assertThat(items.get(0).getNote()).isEqualTo(note);
     }
 
     private void addNewOrderItemWithEmptyStatus(Order order) {
@@ -220,7 +222,7 @@ class OrderItemsProcessorTest {
         order.getItems().get(0).setStatus(OrderItemStatus.IN_PROCESS);
     }
 
-    private Order getNewOrder() {
+    private Order initNewOrder() {
         var order = new Order("dummyUuid", new Date().getTime(), "dummyTable");
         var item0 = new OrderItem(0, workplace1, OrderItemStatus.EMPTY, "item0", 5);
         var item1 = new OrderItem(0, workplace1, OrderItemStatus.EMPTY, "item1", 10);
