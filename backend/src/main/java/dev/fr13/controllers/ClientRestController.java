@@ -6,12 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 public class ClientRestController {
@@ -28,12 +25,5 @@ public class ClientRestController {
         log.debug("Save client {}", client);
         var persisted = clientService.save(client);
         return new ResponseEntity<>(persisted, HttpStatus.CREATED);
-    }
-
-    @GetMapping(path = "/api/v1/clients")
-    public ResponseEntity<List<ClientDto>> getClients() {
-        log.debug("Get clients list");
-        var clients = clientService.findAll();
-        return new ResponseEntity<>(clients, HttpStatus.OK);
     }
 }

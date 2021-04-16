@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,12 +32,6 @@ public class ClientServiceImpl implements ClientService {
                 .ifPresent(i -> client.setId(i.getId()));
         var persisted = repository.save(client);
         return convertor.toDto(persisted);
-    }
-
-    @Override
-    public List<ClientDto> findAll() {
-        log.debug("Get clients list");
-        return convertor.listEntitiesToListDtos(repository.findAll());
     }
 
     @Override
