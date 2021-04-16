@@ -10,6 +10,9 @@ export default {
                 + params.shopUuid + '/workplaces/'
                 + params.workplaceUuid + '/orders'
             const resp = await fetch(url)
+            if (resp.status >= 400 && resp.status < 600) {
+                throw new Error('Bad server response')
+            }
             const data = await resp.json()
             ctx.commit('updateOrders', data)
         },
