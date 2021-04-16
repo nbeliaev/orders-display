@@ -47,4 +47,7 @@ frontend/node_modules/
 frontend/npm-debug.log
 frontend/target
 
+# Docker files #
+db
+
 !.mvn/wrapper/maven-wrapper.jar
