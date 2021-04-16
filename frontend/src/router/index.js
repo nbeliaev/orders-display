@@ -52,6 +52,13 @@ const index = createRouter({
                     },
                 ]
             }
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            component: () => import('@/components/NotFound'),
+            meta: {
+                breadcrumbs: []
+            }
         }
     ]
 })
