@@ -21,14 +21,14 @@ public class ShopRestController {
     }
 
     @PostMapping(path = "/api/v1/clients/{clientUuid}/shops")
-    public ResponseEntity<ShopDto> saveShop(@RequestBody ShopDto shop) {
+    public ResponseEntity<ShopDto> saveClientShop(@RequestBody ShopDto shop) {
         log.debug("Save shop {}", shop);
         var persisted = shopService.save(shop);
         return new ResponseEntity<>(persisted, HttpStatus.OK);
     }
 
     @GetMapping(path = "/api/v1/clients/{clientUuid}/shops")
-    public ResponseEntity<List<ShopDto>> getShops(@PathVariable String clientUuid) {
+    public ResponseEntity<List<ShopDto>> getClientShops(@PathVariable String clientUuid) {
         log.debug("Get shops list by client uuid {}", clientUuid);
         var shops = shopService.findAllByClientUuid(clientUuid);
         return new ResponseEntity<>(shops, HttpStatus.OK);

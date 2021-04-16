@@ -21,15 +21,15 @@ public class WorkplaceRestController {
     }
 
     @GetMapping(path = "/api/v1/clients/{clientId}/shops/{shopId}/workplaces")
-    public ResponseEntity<List<WorkplaceDto>> getWorkplaces(@PathVariable String clientId,
-                                                            @PathVariable String shopId) {
+    public ResponseEntity<List<WorkplaceDto>> getShopWorkplaces(@PathVariable String clientId,
+                                                                @PathVariable String shopId) {
         log.debug("Get workplace list");
         var workplaces = workplaceService.findAllActiveByShopIdAndClientId(shopId, clientId);
         return new ResponseEntity<>(workplaces, HttpStatus.OK);
     }
 
     @PostMapping(path = "/api/v1/clients/{clientId}/shops/{shopId}/workplaces")
-    public ResponseEntity<WorkplaceDto> saveWorkplace(@RequestBody WorkplaceDto workplaceDto) {
+    public ResponseEntity<WorkplaceDto> saveShopWorkplace(@RequestBody WorkplaceDto workplaceDto) {
         log.debug("Save workplace {}", workplaceDto);
         var workplace = workplaceService.save(workplaceDto);
         return new ResponseEntity<>(workplace, HttpStatus.OK);
