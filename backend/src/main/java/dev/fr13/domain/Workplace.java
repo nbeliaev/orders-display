@@ -1,10 +1,22 @@
 package dev.fr13.domain;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "workplaces")
 public class Workplace {
-    private long id;
+    @Id
+    private String id;
+    @Indexed
     private String uuid;
     private String name;
     private boolean active;
+    @DBRef
+    private Shop shop;
+    @DBRef
+    private Client client;
 
     public Workplace() {
     }
@@ -19,11 +31,11 @@ public class Workplace {
         this(uuid, name, true);
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -51,6 +63,30 @@ public class Workplace {
         this.active = active;
     }
 
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
+
+    public String getShopUuid() {
+        return shop.getUuid();
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public String getClientUuid() {
+        return client.getUuid();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -59,25 +95,32 @@ public class Workplace {
         Workplace workplace = (Workplace) o;
 
         if (active != workplace.active) return false;
+        if (!id.equals(workplace.id)) return false;
         if (!uuid.equals(workplace.uuid)) return false;
-        return name.equals(workplace.name);
+        if (!name.equals(workplace.name)) return false;
+        if (!shop.equals(workplace.shop)) return false;
+        return client.equals(workplace.client);
     }
 
     @Override
     public int hashCode() {
-        int result = uuid.hashCode();
+        int result = id.hashCode();
+        result = 31 * result + uuid.hashCode();
         result = 31 * result + name.hashCode();
         result = 31 * result + (active ? 1 : 0);
+        result = 31 * result + shop.hashCode();
+        result = 31 * result + client.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
         return "Workplace{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", uuid='" + uuid + '\'' +
                 ", name='" + name + '\'' +
                 ", active=" + active +
+                ", shop=" + shop +
                 '}';
     }
 }

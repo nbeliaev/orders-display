@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <div class="row justify-content-sm-center">
-      <div class="col">
+    <div class="row">
+      <div class="col d-flex justify-content-center">
         <div class="lds-dual-ring"></div>
       </div>
     </div>

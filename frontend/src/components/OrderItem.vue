@@ -67,11 +67,11 @@ list {
   list-style: none;
 }
 
-.completed {
+.in-process {
   background: darkseagreen;
 }
 
-.in-process {
+.completed{
   text-decoration: line-through;
 }
 </style>

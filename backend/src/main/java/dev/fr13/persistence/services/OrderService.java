@@ -1,6 +1,5 @@
 package dev.fr13.persistence.services;
 
-import dev.fr13.domain.Workplace;
 import dev.fr13.dtos.OrderDto;
 
 import java.util.List;
@@ -8,11 +7,9 @@ import java.util.Optional;
 
 public interface OrderService {
 
-    List<OrderDto> findByWorkplace(Workplace workplace);
+    List<OrderDto> findByClientAndShopAndWorkplace(String clientUuid, String shopUuid, String workplaceUuid);
 
-    List<OrderDto> findAll();
+    OrderDto save(OrderDto dto);
 
-    OrderDto saveOrUpdate(OrderDto dto);
-
-    Optional<OrderDto> deleteByUuid(String uuid);
+    Optional<OrderDto> deleteByClientAndShopAndUuid(String clientUuid, String shopUuid, String orderUuid);
 }

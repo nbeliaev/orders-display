@@ -1,14 +1,29 @@
 package dev.fr13.domain;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Document("orders")
+@CompoundIndex(name = "client_shop_idx",
+        def = "{'client' : 1, 'shop' : 1}")
 public class Order {
-    private long id;
+    @Id
+    private String id;
+    @Indexed
     private String uuid;
     private long timestamp;
     private String table;
+    @DBRef
+    private Shop shop;
+    @DBRef
+    private Client client;
     private List<OrderItem> items = new ArrayList<>();
 
     public Order() {
@@ -20,11 +35,20 @@ public class Order {
         this.table = table;
     }
 
-    public long getId() {
+    public Order(Order copy) {
+        this.id = copy.getId();
+        this.uuid = copy.uuid;
+        this.client = copy.getClient();
+        this.shop = copy.getShop();
+        this.timestamp = copy.getTimestamp();
+        this.table = copy.getTable();
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -52,6 +76,30 @@ public class Order {
         this.table = table;
     }
 
+    public Shop getShop() {
+        return shop;
+    }
+
+    public String getShopUuid() {
+        return shop.getUuid();
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public String getClientUuid() {
+        return client.getUuid();
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
     public List<OrderItem> getItems() {
         return Collections.unmodifiableList(items);
     }
@@ -65,12 +113,40 @@ public class Order {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Order order = (Order) o;
+
+        if (timestamp != order.timestamp) return false;
+        if (!id.equals(order.id)) return false;
+        if (!uuid.equals(order.uuid)) return false;
+        if (!table.equals(order.table)) return false;
+        if (!shop.equals(order.shop)) return false;
+        return client.equals(order.client);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + uuid.hashCode();
+        result = 31 * result + (int) (timestamp ^ (timestamp >>> 32));
+        result = 31 * result + table.hashCode();
+        result = 31 * result + shop.hashCode();
+        result = 31 * result + client.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Order{" +
                 "id=" + id +
                 ", uuid='" + uuid + '\'' +
                 ", timestamp=" + timestamp +
                 ", table='" + table + '\'' +
+                ", shop=" + shop.getName() +
+                ", client=" + client.getName() +
                 '}';
     }
 }

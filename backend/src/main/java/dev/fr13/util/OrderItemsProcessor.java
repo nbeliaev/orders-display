@@ -20,7 +20,7 @@ public class OrderItemsProcessor {
         log.debug("Processing of statuses and rows numbers for a new order");
         var items = order.getItems();
         if (noEmptyStatuses(items)) {
-            log.debug("No empty statuses");
+            log.debug("Found no empty statuses");
             return;
         }
         for (int i = 0; i < items.size(); i++) {
@@ -31,24 +31,39 @@ public class OrderItemsProcessor {
 
     public void refillStatusesAndRowsNumbers(Order source, Order destn) {
         var items = destn.getItems();
-        if (noEmptyStatuses(items)) {
-            log.debug("No empty statuses");
-            return;
-        }
-
         var persistedItems = source.getItems();
-        var newItems = newItemsByPersistedItems(persistedItems, items);
-        destn.setItems(newItems);
-
+        if (noEmptyStatuses(items)) {
+            log.debug("Found no empty statuses");
+            var newItems = addPersistedItems(persistedItems, items);
+            destn.setItems(newItems);
+        } else {
+            var newItems = calcNewItemsByPersisted(persistedItems, items);
+            destn.setItems(newItems);
+        }
     }
 
-    private List<OrderItem> newItemsByPersistedItems(List<OrderItem> persistedItems, List<OrderItem> items) {
-        var newItems = new ArrayList<OrderItem>();
-        var rowsCounter = persistedItems.size();
-        for (OrderItem item : items) {
-            var filteredItems = getFilteredItems(persistedItems, item.getName());
-            var tempItems = new ArrayList<>(filteredItems);
-            var totalPersistedQnt = filteredItems.stream().mapToInt(OrderItem::getQnt).sum();
+    private List<OrderItem> addPersistedItems(List<OrderItem> persistedItems, List<OrderItem> items) {
+        var result = new ArrayList<>(items);
+        var currentWorkplace = items.stream()
+                .map(OrderItem::getWorkplace)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Found no workplace."));
+
+        var itemsByOthersWorkplaces = persistedItems.stream()
+                .filter(i -> !i.getWorkplace().equals(currentWorkplace))
+                .collect(Collectors.toList());
+
+        result.addAll(itemsByOthersWorkplaces);
+        return getSortedItems(result);
+    }
+
+    private List<OrderItem> calcNewItemsByPersisted(List<OrderItem> persisted, List<OrderItem> received) {
+        var result = new ArrayList<OrderItem>();
+        var rowsCounter = persisted.size();
+        for (OrderItem item : received) {
+            var filtered = filterItemsByName(persisted, item.getName());
+            var tempItems = new ArrayList<>(filtered);
+            var totalPersistedQnt = filtered.stream().mapToInt(OrderItem::getQnt).sum();
             var qntDiff = item.getQnt() - totalPersistedQnt;
             if (isNewRow(totalPersistedQnt)) {
                 log.debug("Found a new order item. Row number is {}, name is {}", rowsCounter, item.getName());
@@ -84,9 +99,10 @@ public class OrderItemsProcessor {
                     reduceQntAndAddNote(tempItems, -qntDiff);
                 }
             }
-            newItems.addAll(tempItems);
+            addReceivedNote(item.getNote(), tempItems);
+            result.addAll(tempItems);
         }
-        return getSortedItems(newItems);
+        return getSortedItems(result);
     }
 
     private void reduceQntAndAddNote(List<OrderItem> items, int qnt) {
@@ -101,6 +117,15 @@ public class OrderItemsProcessor {
     private void setRowNumberAndStatusAsNew(OrderItem item, int i) {
         item.setRowNumber(i);
         item.setStatus(OrderItemStatus.NEW);
+    }
+
+    private void addReceivedNote(String note, ArrayList<OrderItem> tempItems) {
+        if (!note.isEmpty()) {
+            tempItems.stream()
+                    .findFirst()
+                    .orElseThrow(IllegalStateException::new)
+                    .setNote(note);
+        }
     }
 
     private List<OrderItem> getSortedItems(ArrayList<OrderItem> newItems) {
@@ -121,7 +146,7 @@ public class OrderItemsProcessor {
         return qntDiff > 0;
     }
 
-    private List<OrderItem> getFilteredItems(List<OrderItem> items, String filter) {
+    private List<OrderItem> filterItemsByName(List<OrderItem> items, String filter) {
         return items.stream()
                 .filter(i -> i.getName().equals(filter))
                 .collect(Collectors.toList());

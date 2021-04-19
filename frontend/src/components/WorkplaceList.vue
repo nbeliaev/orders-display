@@ -8,9 +8,10 @@
               class="list-group-item text-center"
               v-for="workplace in allWorkplaces"
               :key="workplace.id">
-            <router-link :to="`/workplace/${workplace.uuid}`"
-                         tag="button"
-                         class="btn btn-outline-dark btn-lg btn-block">
+            <router-link
+                :to="`/clients/${workplace.client}/shops/${workplace.shop}/workplaces/${workplace.uuid}/orders`"
+                tag="button"
+                class="btn btn-outline-dark btn-lg btn-block">
               {{ workplace.name }}
             </router-link>
           </li>
@@ -24,10 +25,18 @@
 import {mapGetters, mapActions} from 'vuex'
 
 export default {
-  computed: mapGetters(['allWorkplaces']),
+  computed: {
+    ...mapGetters(['allWorkplaces']),
+    queryParams() {
+      return {
+        clientUuid: this.$route.params.clientUuid,
+        shopUuid: this.$route.params.shopUuid,
+      }
+    }
+  },
   methods: mapActions(['fetchWorkplaces']),
-  mounted() {
-    this.fetchWorkplaces()
+  async mounted() {
+    this.fetchWorkplaces(this.queryParams)
   }
 }
 

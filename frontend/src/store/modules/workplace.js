@@ -1,7 +1,11 @@
 export default {
     actions: {
-        async fetchWorkplaces(ctx) {
-            const resp = await fetch('/api/v1/workplaces')
+        async fetchWorkplaces(ctx, params) {
+            const url = '/api/v1/clients/' + params.clientUuid + '/shops/' + params.shopUuid + '/workplaces'
+            const resp = await fetch(url)
+            if (resp.status >= 400 && resp.status < 600) {
+                throw new Error('Bad server response')
+            }
             const data = await resp.json()
             ctx.commit('updateWorkplaces', data)
         }

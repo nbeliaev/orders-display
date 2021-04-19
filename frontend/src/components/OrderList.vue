@@ -1,5 +1,6 @@
 <template>
-  <div class="m-2" v-if="allOrders.length !== 0">
+  <Loader v-if="isLoading"/>
+  <div class="m-2" v-else-if="!isLoading && sortedOrders.length !== 0">
     <div class="container-fluid">
       <div class="row">
         <Order
@@ -10,11 +11,12 @@
       </div>
     </div>
   </div>
-  <h1 v-else class="text-center">No active orders for now ;)</h1>
+  <p v-else class="fs-2 text-center">No active orders for now ;)</p>
 </template>
 
 <script>
 import Order from '@/components/Order'
+import Loader from '@/components/Loader'
 import {mapActions, mapGetters} from 'vuex'
 
 export default {
@@ -24,7 +26,7 @@ export default {
     }
   },
   async mounted() {
-    this.fetchOrders(this.workplaceId)
+    this.fetchOrders(this.queryParams)
     this.pollData()
   },
   beforeUnmount() {
@@ -34,12 +36,16 @@ export default {
     this.clearState()
   },
   components: {
-    Order
+    Loader, Order
   },
   computed: {
-    ...mapGetters(['allOrders']),
-    workplaceId() {
-      return this.$route.params.id
+    ...mapGetters(['allOrders', 'isLoading']),
+    queryParams() {
+      return {
+        clientUuid: this.$route.params.clientUuid,
+        shopUuid: this.$route.params.shopUuid,
+        workplaceUuid: this.$route.params.workplaceUuid
+      }
     },
     sortedOrders() {
       return this.allOrders.slice().sort((i1, i2) => {
@@ -52,9 +58,11 @@ export default {
   methods: {
     ...mapActions(['fetchOrders', 'clearState']),
     pollData() {
-      this.polling = setInterval(this.fetchOrders, 15_000, this.workplaceId)
+      this.polling = setInterval(
+          this.fetchOrders,
+          15_000,
+          this.queryParams)
     }
   }
-
 }
 </script>

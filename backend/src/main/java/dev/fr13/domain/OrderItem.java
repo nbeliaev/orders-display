@@ -1,8 +1,10 @@
 package dev.fr13.domain;
 
+import org.springframework.data.mongodb.core.mapping.DBRef;
+
 public class OrderItem {
-    private long id;
     private int rowNumber;
+    @DBRef
     private Workplace workplace;
     private OrderItemStatus status;
     private String name;
@@ -27,14 +29,6 @@ public class OrderItem {
 
     public OrderItem(int rowNumber, Workplace workplace, String name, int qnt) {
         this(rowNumber, workplace, OrderItemStatus.NEW, name, qnt, "");
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public int getRowNumber() {
@@ -103,6 +97,7 @@ public class OrderItem {
         if (rowNumber != orderItem.rowNumber) return false;
         if (qnt != orderItem.qnt) return false;
         if (!workplace.equals(orderItem.workplace)) return false;
+        if (status != orderItem.status) return false;
         if (!name.equals(orderItem.name)) return false;
         return note.equals(orderItem.note);
     }
@@ -111,6 +106,7 @@ public class OrderItem {
     public int hashCode() {
         int result = rowNumber;
         result = 31 * result + workplace.hashCode();
+        result = 31 * result + status.hashCode();
         result = 31 * result + name.hashCode();
         result = 31 * result + qnt;
         result = 31 * result + note.hashCode();
@@ -120,7 +116,6 @@ public class OrderItem {
     @Override
     public String toString() {
         return "OrderItem{" +
-                "id=" + id +
                 ", rowNumber=" + rowNumber +
                 ", workplace=" + workplace +
                 ", status='" + status + '\'' +
