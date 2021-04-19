@@ -11,7 +11,7 @@
       </div>
     </div>
   </div>
-  <h1 v-else class="text-center">No active orders for now ;)</h1>
+  <p v-else class="fs-2 text-center">No active orders for now ;)</p>
 </template>
 
 <script>
