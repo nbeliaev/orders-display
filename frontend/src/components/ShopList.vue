@@ -1,6 +1,6 @@
 <template>
   <div class="grey darken-1 empty-layout">
-    <div class="card auth-card">
+    <div class="card auth-card" v-if="allShops.length">
       <div class="card-content">
         <h5 class="text-center">Please select the shop</h5>
         <ul class="list-group list-group-flush">
@@ -17,6 +17,7 @@
         </ul>
       </div>
     </div>
+    <p v-else class="fs-2 text-center">The client has no any shops</p>
   </div>
 </template>
 
