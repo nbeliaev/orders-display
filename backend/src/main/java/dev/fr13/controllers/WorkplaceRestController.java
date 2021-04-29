@@ -25,6 +25,7 @@ public class WorkplaceRestController {
                                                                 @PathVariable String shopId) {
         log.debug("Get workplace list");
         var workplaces = workplaceService.findAllActiveByShopIdAndClientId(shopId, clientId);
+        log.debug("Found {} workplaces", workplaces.size());
         return new ResponseEntity<>(workplaces, HttpStatus.OK);
     }
 

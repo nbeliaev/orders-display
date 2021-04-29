@@ -28,6 +28,7 @@ public class OrderRestController {
 
         log.debug("Get order list by client uuid {}, shop uuid {} and workplace uuid {}", clientUuid, shopUuid, workplaceUuid);
         var orders = orderService.findByClientAndShopAndWorkplace(clientUuid, shopUuid, workplaceUuid);
+        log.debug("Found {} orders", orders.size());
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 

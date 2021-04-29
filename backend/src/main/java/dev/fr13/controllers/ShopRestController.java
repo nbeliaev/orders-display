@@ -31,6 +31,7 @@ public class ShopRestController {
     public ResponseEntity<List<ShopDto>> getClientShops(@PathVariable String clientUuid) {
         log.debug("Get shops list by client uuid {}", clientUuid);
         var shops = shopService.findAllByClientUuid(clientUuid);
+        log.debug("Found {} shops", shops.size());
         return new ResponseEntity<>(shops, HttpStatus.OK);
     }
 }
