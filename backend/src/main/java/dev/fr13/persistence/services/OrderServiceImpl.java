@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
         log.debug("Find all orders by client {}, shop {} and workplace {}",
                 client.getName(), shop.getName(), workplace.getName());
         var orders = repository.findAllByClientAndShop(
-                client, shop, Sort.by(Sort.Direction.DESC, "timestamp"));
+                client, shop, Sort.by(Sort.Direction.ASC, "timestamp"));
 
         var result = new ArrayList<Order>();
         for (Order order : orders) {
